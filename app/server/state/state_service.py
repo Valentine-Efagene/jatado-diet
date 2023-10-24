@@ -1,12 +1,12 @@
 from bson.objectid import ObjectId
 from server.database import *
-from .state_serializer import serialize_state
+from .state_serializer import deserialize_state
 
 
 async def retrieve_states():
     cursor = state_collection.find()
     results = await cursor.to_list(None)
-    states = [serialize_state(**result) for result in results]
+    states = [deserialize_state(result) for result in results]
     return states
 
 # Retrieve a state with a matching ID
@@ -16,13 +16,13 @@ async def retrieve_state(id: str) -> dict:
     state = await state_collection.find_one({"_id": ObjectId(id)})
 
     if state:
-        return serialize_state(state)
+        return deserialize_state(state)
 
 
 async def add_state(data: dict) -> dict:
     state = await state_collection.insert_one(data)
     new_state = await state_collection.find_one({"_id": state.inserted_id})
-    return serialize_state(new_state)
+    return deserialize_state(new_state)
 
 # Update a state with a matching ID
 

@@ -1,5 +1,5 @@
 from .country_schema import CountrySchema
 
 
-def serialize_country(country) -> dict:
+def deserialize_country(country) -> dict:
     return CountrySchema(**country)

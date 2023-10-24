@@ -34,7 +34,7 @@ class CreateCountryDto(BaseModel):
     }
 
 
-class UpdateCountryModel(BaseModel):
+class UpdateCountryDto(BaseModel):
     name: Optional[str]
     description: Optional[str]
 

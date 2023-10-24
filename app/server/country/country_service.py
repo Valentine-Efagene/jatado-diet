@@ -1,12 +1,12 @@
 from bson.objectid import ObjectId
 from server.database import *
-from .country_serializer import serialize_country
+from .country_serializer import deserialize_country
 
 
 async def retrieve_countries():
     cursor = country_collection.find()
     results = await cursor.to_list(None)
-    countries = [serialize_country(result) for result in results]
+    countries = [deserialize_country(result) for result in results]
     return countries
 
 # Retrieve a country with a matching ID
@@ -16,13 +16,13 @@ async def retrieve_country(id: str) -> dict:
     country = await country_collection.find_one({"_id": ObjectId(id)})
 
     if country:
-        return serialize_country(country)
+        return deserialize_country(country)
 
 
 async def add_country(data: dict) -> dict:
     country = await country_collection.insert_one(data)
     new_country = await country_collection.find_one({"_id": country.inserted_id})
-    return serialize_country(new_country)
+    return deserialize_country(new_country)
 
 # Update a country with a matching ID
 

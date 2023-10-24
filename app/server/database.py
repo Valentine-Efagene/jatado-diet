@@ -7,3 +7,4 @@ database: AsyncIOMotorDatabase = client.diet
 
 country_collection = database.get_collection("countries")
 state_collection = database.get_collection("states")
+lga_collection = database.get_collection("lgas")

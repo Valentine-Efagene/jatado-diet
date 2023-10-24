@@ -12,26 +12,26 @@ from .state_service import (
 from .state_schema import (
     ErrorResponseModel,
     ResponseModel,
-    StateSchema,
-    UpdateStateModel,
+    CreateStateDto,
+    UpdateStateDto,
 )
 
 router = APIRouter()
 
 
-@router.post("/", response_description="state data added into the database")
-async def add_state_data(state: StateSchema = Body(...)):
+@router.post("/", response_description="State data added into the database")
+async def add_state_data(state: CreateStateDto = Body(...)):
     state = jsonable_encoder(state)
     new_state = await add_state(state)
     return ResponseModel(new_state, "state added successfully.")
 
 
-@router.get("/", response_description="Countries retrieved")
-async def get_countries():
+@router.get("/", response_description="States retrieved")
+async def get_states():
     countries = await retrieve_states()
 
     if countries:
-        return ResponseModel(countries, "Countries data retrieved successfully")
+        return ResponseModel(countries, "States data retrieved successfully")
 
     return ResponseModel(countries, "Empty list returned")
 
@@ -47,7 +47,7 @@ async def get_state_data(id):
 
 
 @router.put("/{id}")
-async def update_state_data(id: str, req: UpdateStateModel = Body(...)):
+async def update_state_data(id: str, req: UpdateStateDto = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_state = await update_state(id, req)
 

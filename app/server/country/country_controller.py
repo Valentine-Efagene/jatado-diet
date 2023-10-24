@@ -14,7 +14,7 @@ from .country_schema import (
     ResponseModel,
     CountrySchema,
     CreateCountryDto,
-    UpdateCountryModel,
+    UpdateCountryDto,
 )
 
 router = APIRouter()
@@ -48,7 +48,7 @@ async def get_countries():
 
 
 @router.put("/{id}")
-async def update_country_data(id: str, req: UpdateCountryModel = Body(...)):
+async def update_country_data(id: str, req: UpdateCountryDto = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_country = await update_country(id, req)
 

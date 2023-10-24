@@ -3,41 +3,41 @@ from pydantic import BaseModel, Field
 from server.common.types import PyObjectId
 
 
-class StateSchema(BaseModel):
+class LgaSchema(BaseModel):
     id: PyObjectId = Field(alias='_id')
     name: str = Field(...)
     description: str = Field(None)
-    country_id: str = Field(...)
+    state_id: str = Field(None)
 
     model_config = {
-        'arbitrary_types_allowed': True,
         "json_schema_extra": {
             "example": {
-                "name": "Lagos",
-                "description": "The economic capital of Nigeria",
-                "country_id": "Country ID"
+                "name": "Ethiope East",
+                "description": "Has a Lga university (DELSU)",
+                "state_id": "State ID"
             }
         },
+        'arbitrary_types_allowed': True,
     }
 
 
-class CreateStateDto(BaseModel):
+class CreateLgaDto(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
-    country_id: str = Field(None)
+    state_id: str = Field(None)
 
     model_config = {
         "json_schema_extra": {
             "example": {
                 "name": "Lagos",
                 "description": "The economic capital of Nigeria",
-                "country_id": "Country Id"
+                "state_id": "State ID"
             }
         },
     }
 
 
-class UpdateStateDto(BaseModel):
+class UpdateLgaDto(BaseModel):
     name: Optional[str]
     description: Optional[str]
 
@@ -46,7 +46,7 @@ class UpdateStateDto(BaseModel):
             "example": {
                 "name": "Lagos",
                 "description": "The economic capital of Nigeria",
-                "country_id": "Country Id"
+                "lga_id": "LGA ID",
             }
         }
     }
