@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
+from ..common.schema import ResponseModel, ErrorResponseModel
 
 from .country_service import (
     add_country,
@@ -10,12 +11,10 @@ from .country_service import (
 )
 
 from .country_schema import (
-    ErrorResponseModel,
-    ResponseModel,
-    CountrySchema,
     CreateCountryDto,
     UpdateCountryDto,
 )
+
 
 router = APIRouter()
 

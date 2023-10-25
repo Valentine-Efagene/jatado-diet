@@ -10,11 +10,12 @@ from .state_service import (
 )
 
 from .state_schema import (
-    ErrorResponseModel,
-    ResponseModel,
     CreateStateDto,
     UpdateStateDto,
 )
+
+
+from ..common.schema import ResponseModel, ErrorResponseModel
 
 router = APIRouter()
 

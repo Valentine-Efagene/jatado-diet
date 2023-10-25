@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
+from ..common.schema import ResponseModel, ErrorResponseModel
 
 from .lga_service import (
     add_lga,
@@ -10,11 +11,10 @@ from .lga_service import (
 )
 
 from .lga_schema import (
-    ErrorResponseModel,
-    ResponseModel,
     CreateLgaDto,
     UpdateLgaDto,
 )
+
 
 router = APIRouter()
 

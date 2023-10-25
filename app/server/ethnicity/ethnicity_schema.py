@@ -3,49 +3,49 @@ from pydantic import BaseModel, Field
 from ..common.types import PyObjectId
 
 
-class LgaSchema(BaseModel):
+class EthnicitySchema(BaseModel):
     id: PyObjectId = Field(alias='_id')
     name: str = Field(...)
     description: str = Field(None)
-    state_id: str = Field(None)
+    lga_id: str = Field(None)
 
     model_config = {
         "json_schema_extra": {
             "example": {
-                "name": "Ethiope East",
-                "description": "Has a Lga university (DELSU)",
-                "state_id": "State ID"
+                "name": "Urhobo",
+                "description": "An ethnicity",
+                "lga_id": "LGA ID"
             }
         },
         'arbitrary_types_allowed': True,
     }
 
 
-class CreateLgaDto(BaseModel):
+class CreateEthnicityDto(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
-    state_id: str = Field(None)
+    lga_id: str = Field(None)
 
     model_config = {
         "json_schema_extra": {
             "example": {
-                "name": "Lagos",
-                "description": "The economic capital of Nigeria",
-                "state_id": "State ID"
+                "name": "Urhobo",
+                "description": "An ethnicity",
+                "lga_id": "LGA ID"
             }
         },
     }
 
 
-class UpdateLgaDto(BaseModel):
+class UpdateEthnicityDto(BaseModel):
     name: Optional[str]
     description: Optional[str]
 
     model_config = {
         "json_schema_extra": {
             "example": {
-                "name": "Lagos",
-                "description": "The economic capital of Nigeria",
+                "name": "Urhobo",
+                "description": "An ethnicity",
                 "lga_id": "LGA ID",
             }
         }

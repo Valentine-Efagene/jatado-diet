@@ -1,5 +1,5 @@
 from bson.objectid import ObjectId
-from server.database import *
+from ..database import *
 from .country_serializer import deserialize_country
 
 
