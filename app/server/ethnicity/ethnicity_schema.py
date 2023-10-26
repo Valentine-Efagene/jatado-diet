@@ -12,9 +12,9 @@ class EthnicitySchema(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "name": "Urhobo",
-                "description": "An ethnicity",
-                "lga_id": "LGA ID"
+                "name": "Waffirians",
+                "description": "People of Warri",
+                "lga_id": "653a2e485c3ed608fd5c6d13"
             }
         },
         'arbitrary_types_allowed': True,
@@ -29,9 +29,9 @@ class CreateEthnicityDto(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "name": "Urhobo",
-                "description": "An ethnicity",
-                "lga_id": "LGA ID"
+                "name": "Waffirians",
+                "description": "People of Warri",
+                "lga_id": "653a2e485c3ed608fd5c6d13"
             }
         },
     }
@@ -44,9 +44,9 @@ class UpdateEthnicityDto(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "name": "Urhobo",
-                "description": "An ethnicity",
-                "lga_id": "LGA ID",
+                "name": "Waffirians",
+                "description": "People of Warri",
+                "lga_id": "653a2e485c3ed608fd5c6d13",
             }
         }
     }

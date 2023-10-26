@@ -3,6 +3,7 @@ from .country.country_controller import router as CountryRouter
 from .state.state_controller import router as StateRouter
 from .lga.lga_controller import router as LgaRouter
 from .ethnicity.ethnicity_controller import router as EthnicityRouter
+from .language.language_controller import router as LanguageRouter
 from .config import settings
 
 app = FastAPI()
@@ -10,7 +11,8 @@ app = FastAPI()
 app.include_router(CountryRouter, prefix='/countries', tags=['Country'])
 app.include_router(StateRouter, prefix='/states', tags=['State'])
 app.include_router(LgaRouter, prefix='/lgas', tags=['LGA'])
-app.include_router(EthnicityRouter, prefix='/ethnicity', tags=['Ethnicity'])
+app.include_router(EthnicityRouter, prefix='/ethnicities', tags=['Ethnicity'])
+app.include_router(LanguageRouter, prefix='/languages', tags=['Language'])
 
 
 @app.get('/', tags=['Root'])

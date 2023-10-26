@@ -1,19 +1,5 @@
-from app.server.app import app
 from fastapi.testclient import TestClient
 import pytest
-from ..database import client as db_client, db_name
-from ..config import settings
-
-
-@pytest.fixture(scope="session", autouse=True)
-def test_client():
-
-    if (db_name != settings.mongodb_test_db_name):
-        raise Exception('You are not using the test Database')
-
-    with TestClient(app) as test_client:
-        yield test_client
-        db_client.drop_database(db_name)
 
 
 @pytest.mark.asyncio

@@ -38,3 +38,5 @@ state_collection: AsyncIOMotorCollection = database.get_collection("states")
 lga_collection: AsyncIOMotorCollection = database.get_collection("lgas")
 ethnicity_collection: AsyncIOMotorCollection = database.get_collection(
     "ethnicities")
+language_collection: AsyncIOMotorCollection = database.get_collection(
+    "languages")
