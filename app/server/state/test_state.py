@@ -1,16 +1,16 @@
 import pytest
-from bson import ObjectId
+
+# from ..config import settings
 
 
 @pytest.mark.asyncio
 # Create country
-async def test_state_crud(test_client):
+async def test_state_crud(test_client, mongo_client):
     response = test_client.post(
         "/countries/",
         json={
-            "name": "Delta",
-            "description": "Multicultural",
-            "country_id": str(ObjectId())
+            "name": "Nigeria",
+            "description": "Most populous country in africa",
         },
     )
 
@@ -45,9 +45,12 @@ async def test_state_crud(test_client):
     data = response.json()['data']
     assert len(data) == 1
 
+    # Teardown
+    mongo_client.drop_database('diet_test')
+
 
 @pytest.mark.asyncio
-async def test_get_countries_paginated(test_client):
+async def test_get_states_paginated(test_client, mongo_client):
     for i in range(20):
         response = test_client.post(
             "/states/",
@@ -57,6 +60,8 @@ async def test_get_countries_paginated(test_client):
                 "country_id": '65392b337c2ebd6d003ddb4a'
             },
         )
+
+        assert response.status_code == 200
 
     response = test_client.post(
         "/states/",
@@ -71,3 +76,11 @@ async def test_get_countries_paginated(test_client):
     assert response.status_code == 200
     data = response.json()['data']
     assert len(data) == 1
+
+    response = test_client.get("/states")
+    assert response.status_code == 200
+    data = response.json()['data']
+    assert len(data) == 21
+
+    # Teardown
+    mongo_client.drop_database('diet_test')

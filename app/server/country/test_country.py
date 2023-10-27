@@ -1,8 +1,10 @@
 import pytest
 
+from ..config import settings
+
 
 @pytest.mark.asyncio
-async def test_create_country(test_client):
+async def test_create_country(test_client, mongo_client):
     response = test_client.post(
         "/countries/",
         json={
@@ -18,6 +20,9 @@ async def test_create_country(test_client):
     assert response.status_code == 200
     assert response.json()['data'] == data
 
+    # Teardown
+    mongo_client.drop_database(settings.mongodb_test_db_name)
+
 
 @pytest.mark.asyncio
 async def test_get_countries(test_client):
@@ -26,7 +31,7 @@ async def test_get_countries(test_client):
 
 
 @pytest.mark.asyncio
-async def test_get_countries_paginated(test_client):
+async def test_get_countries_paginated(test_client, mongo_client):
     for i in range(20):
         response = test_client.post(
             "/countries/",
@@ -40,3 +45,11 @@ async def test_get_countries_paginated(test_client):
     assert response.status_code == 200
     data = response.json()['data']
     assert len(data) == 3
+
+    response = test_client.get("/countries")
+    assert response.status_code == 200
+    data = response.json()['data']
+    assert len(data) == 20
+
+    # Teardown
+    mongo_client.drop_database(settings.mongodb_test_db_name)

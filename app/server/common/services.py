@@ -3,7 +3,7 @@ from .schema import ListQueryParams
 from ..config import settings
 
 
-async def retrieve_list(params: ListQueryParams, collection: AsyncIOMotorCollection, deserialize, search_field: str | None = 'name'):
+async def retrieve_list(params: ListQueryParams, collection: AsyncIOMotorCollection, deserialize, search_field: str | None = 'name') -> list:
     page = params.page
     limit = params.limit
     keyword = params.keyword
@@ -20,7 +20,11 @@ async def retrieve_list(params: ListQueryParams, collection: AsyncIOMotorCollect
         },
     } if keyword else {}
 
-    cursor = collection.find(search).limit(resPerPage).skip(skip)
+    if limit == None and page == None:
+        cursor = collection.find(search)
+    else:
+        cursor = collection.find(search).limit(resPerPage).skip(skip)
+
     results = await cursor.to_list(None)
-    data = [deserialize(result) for result in results]
+    data: list = [deserialize(result) for result in results]
     return data

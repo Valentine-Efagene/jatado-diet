@@ -38,8 +38,8 @@ class CreateEthnicityDto(BaseModel):
 
 
 class UpdateEthnicityDto(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
+    name: str | None = Field(None)
+    description: str | None = Field(None)
 
     model_config = {
         "json_schema_extra": {

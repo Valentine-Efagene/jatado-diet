@@ -1,12 +1,13 @@
 import pytest
-from ..database import client as db_client, db_name
 from ..config import settings
 from bson import ObjectId
+
+from ..config import settings
 
 
 @pytest.mark.asyncio
 # Create Ethnicity
-async def test_language_crud(test_client):
+async def test_language_crud(test_client, mongo_client):
     response = test_client.post(
         "/ethnicities/",
         json={
@@ -70,3 +71,6 @@ async def test_language_crud(test_client):
     assert response.status_code == 200
     data = response.json()['data']
     assert len(data) == 0
+
+    # Teardown
+    mongo_client.drop_database(settings.mongodb_test_db_name)

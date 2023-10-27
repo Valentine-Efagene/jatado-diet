@@ -1,12 +1,15 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 from fastapi.encoders import jsonable_encoder
 from ..common.schema import ResponseModel, ErrorResponseModel
+from ..common.services import retrieve_list
+from ..common.schema import ListQueryParams
+from ..database import lga_collection
+from .lga_helper import deserialize_lga
 
 from .lga_service import (
     add_lga,
     delete_lga,
     retrieve_lga,
-    retrieve_lgas,
     update_lga,
 )
 
@@ -27,8 +30,8 @@ async def add_lga_data(lga: CreateLgaDto = Body(...)):
 
 
 @router.get("/", response_description="lgas retrieved")
-async def get_lgas():
-    countries = await retrieve_lgas()
+async def get_lgas(params: ListQueryParams = Depends()):
+    countries = await retrieve_list(params=params, collection=lga_collection, deserialize=deserialize_lga)
 
     if countries:
         return ResponseModel(countries, "lgas data retrieved successfully")

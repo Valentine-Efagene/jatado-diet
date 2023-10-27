@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Depends
-from fastapi.encoders import jsonable_encoder
+from ..common.serializer import serialize
 from ..common.schema import ListQueryParams
 from ..common.services import retrieve_list
 from ..database import state_collection
@@ -25,7 +25,7 @@ router = APIRouter()
 
 @router.post("/", response_description="State data added into the database")
 async def add_state_data(state: CreateStateDto = Body(...)):
-    state = jsonable_encoder(state)
+    state = serialize(state)
     new_state = await add_state(state)
     return ResponseModel(new_state, "state added successfully.")
 
