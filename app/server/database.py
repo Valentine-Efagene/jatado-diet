@@ -40,3 +40,7 @@ ethnicity_collection: AsyncIOMotorCollection = database.get_collection(
     "ethnicities")
 language_collection: AsyncIOMotorCollection = database.get_collection(
     "languages")
+macro_nutrient_collection: AsyncIOMotorCollection = database.get_collection(
+    "macro_nutrients")
+micro_nutrient_collection: AsyncIOMotorCollection = database.get_collection(
+    "micro_nutrients")

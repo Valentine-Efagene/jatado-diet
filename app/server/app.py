@@ -4,6 +4,8 @@ from .state.state_controller import router as StateRouter
 from .lga.lga_controller import router as LgaRouter
 from .ethnicity.ethnicity_controller import router as EthnicityRouter
 from .language.language_controller import router as LanguageRouter
+from .macro_nutrient.macro_nutrient_controller import router as MacroNutrientRouter
+from .micro_nutrient.micro_nutrient_controller import router as MicroNutrientRouter
 from .config import settings
 
 
@@ -16,6 +18,10 @@ def create_application() -> FastAPI:
     app.include_router(
         EthnicityRouter, prefix='/ethnicities', tags=['Ethnicity'])
     app.include_router(LanguageRouter, prefix='/languages', tags=['Language'])
+    app.include_router(MacroNutrientRouter,
+                       prefix='/macro_nutrients', tags=['Macro Nutrients'])
+    app.include_router(MicroNutrientRouter,
+                       prefix='/micro_nutrients', tags=['Micro Nutrients'])
 
     @app.get('/', tags=['Root'])
     async def read_root():
