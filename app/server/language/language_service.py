@@ -3,12 +3,6 @@ from ..database import *
 from .language_helper import deserialize_language
 
 
-async def retrieve_languages():
-    cursor = language_collection.find()
-    results = await cursor.to_list(None)
-    languages = [deserialize_language(result) for result in results]
-    return languages
-
 # Retrieve a language with a matching ID
 
 

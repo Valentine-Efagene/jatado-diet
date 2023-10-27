@@ -1,12 +1,15 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 from ..common.serializer import serialize
+from ..common.services import retrieve_list
+from ..database import language_collection
+from ..common.schema import ListQueryParams
 from ..common.schema import ResponseModel, ErrorResponseModel
+from .language_helper import deserialize_language
 
 from .language_service import (
     add_language,
     delete_language,
     retrieve_language,
-    retrieve_languages,
     update_language,
 )
 
@@ -37,8 +40,8 @@ async def get_language_data(id):
 
 
 @router.get("/", response_description="Languages retrieved")
-async def get_languages():
-    languages = await retrieve_languages()
+async def get_languages(params: ListQueryParams = Depends()):
+    languages = await retrieve_list(params=params, collection=language_collection, deserialize=deserialize_language)
 
     if languages:
         return ResponseModel(languages, "Languages data retrieved successfully")

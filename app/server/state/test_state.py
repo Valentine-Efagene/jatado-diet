@@ -1,6 +1,6 @@
 import pytest
 
-# from ..config import settings
+from ..config import settings
 
 
 @pytest.mark.asyncio
@@ -46,11 +46,16 @@ async def test_state_crud(test_client, mongo_client):
     assert len(data) == 1
 
     # Teardown
-    mongo_client.drop_database('diet_test')
+    mongo_client.drop_database(settings.mongodb_test_db_name)
 
 
 @pytest.mark.asyncio
 async def test_get_states_paginated(test_client, mongo_client):
+    response = test_client.get("/states")
+    assert response.status_code == 200
+    data = response.json()['data']
+    assert len(data) == 0
+
     for i in range(20):
         response = test_client.post(
             "/states/",
@@ -72,6 +77,8 @@ async def test_get_states_paginated(test_client, mongo_client):
         },
     )
 
+    assert response.status_code == 200
+
     response = test_client.get("/states?limit=3&page=1&keyword=Kaduna")
     assert response.status_code == 200
     data = response.json()['data']
@@ -83,4 +90,4 @@ async def test_get_states_paginated(test_client, mongo_client):
     assert len(data) == 21
 
     # Teardown
-    mongo_client.drop_database('diet_test')
+    mongo_client.drop_database(settings.mongodb_test_db_name)

@@ -3,12 +3,6 @@ from ..database import *
 from .ethnicity_helper import deserialize_ethnicity
 
 
-async def retrieve_ethnicities():
-    cursor = ethnicity_collection.find()
-    results = await cursor.to_list(None)
-    ethnicitys = [deserialize_ethnicity(result) for result in results]
-    return ethnicitys
-
 # Retrieve a ethnicity with a matching ID
 
 
