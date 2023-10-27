@@ -1,11 +1,14 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 from fastapi.encoders import jsonable_encoder
+from ..common.schema import ListQueryParams
+from ..common.services import retrieve_list
+from ..database import state_collection
+from .state_helper import deserialize_state
 
 from .state_service import (
     add_state,
     delete_state,
     retrieve_state,
-    retrieve_states,
     update_state,
 )
 
@@ -28,13 +31,13 @@ async def add_state_data(state: CreateStateDto = Body(...)):
 
 
 @router.get("/", response_description="States retrieved")
-async def get_states():
-    countries = await retrieve_states()
+async def get_states(params: ListQueryParams = Depends()):
+    states = await retrieve_list(params=params, collection=state_collection, deserialize=deserialize_state)
 
-    if countries:
-        return ResponseModel(countries, "States data retrieved successfully")
+    if states:
+        return ResponseModel(states, "States data retrieved successfully")
 
-    return ResponseModel(countries, "Empty list returned")
+    return ResponseModel(states, "Empty list returned")
 
 
 @router.get("/{id}", response_description="state data retrieved")

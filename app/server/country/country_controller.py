@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Body, Depends
 from ..common.schema import ResponseModel, ErrorResponseModel, ListQueryParams
 from ..common.serializer import serialize
+from ..common.services import retrieve_list
+from ..database import country_collection
+from .country_helper import deserialize_country
 
 from .country_service import (
     add_country,
     delete_country,
     retrieve_country,
-    retrieve_countries,
     update_country,
 )
 
@@ -38,7 +40,7 @@ async def get_country_data(id):
 
 @router.get("/", response_description="Countries retrieved")
 async def get_countries(params: ListQueryParams = Depends()):
-    countries = await retrieve_countries(params)
+    countries = await retrieve_list(params, country_collection, deserialize_country)
 
     if countries:
         return ResponseModel(countries, "Countries data retrieved successfully")

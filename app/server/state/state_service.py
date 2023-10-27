@@ -3,12 +3,6 @@ from ..database import *
 from .state_helper import deserialize_state
 
 
-async def retrieve_states():
-    cursor = state_collection.find()
-    results = await cursor.to_list(None)
-    states = [deserialize_state(result) for result in results]
-    return states
-
 # Retrieve a state with a matching ID
 
 

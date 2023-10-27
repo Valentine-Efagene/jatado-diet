@@ -1,12 +1,15 @@
 from fastapi import APIRouter, Body
 from ..common.serializer import serialize
 from ..common.schema import ResponseModel, ErrorResponseModel
+from ..common.services import retrieve_list
+from ..common.schema import ListQueryParams
+from ..database import ethnicity_collection
+from .ethnicity_helper import deserialize_ethnicity
 
 from .ethnicity_service import (
     add_ethnicity,
     delete_ethnicity,
     retrieve_ethnicity,
-    retrieve_ethnicities,
     update_ethnicity,
 )
 
@@ -27,8 +30,8 @@ async def add_ethnicity_data(ethnicity: CreateEthnicityDto = Body(...)):
 
 
 @router.get("/", response_description="ethnicities retrieved")
-async def get_ethnicities():
-    countries = await retrieve_ethnicities()
+async def get_ethnicities(params: ListQueryParams):
+    countries = await retrieve_list(params=params, collection=ethnicity_collection, deserialize=deserialize_ethnicity)
 
     if countries:
         return ResponseModel(countries, "ethnicitys data retrieved successfully")
