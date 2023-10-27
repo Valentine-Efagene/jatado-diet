@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
 from ..database import *
-from .lga_serializer import deserialize_lga
+from .lga_helper import deserialize_lga
 
 
 async def retrieve_lgas():

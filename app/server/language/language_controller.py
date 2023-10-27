@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body
-from fastapi.encoders import jsonable_encoder
+from ..common.serializer import serialize
 from ..common.schema import ResponseModel, ErrorResponseModel
 
 from .language_service import (
@@ -21,7 +21,7 @@ router = APIRouter()
 
 @router.post("/", response_description="Language data added into the database")
 async def add_language_data(language: CreateLanguageDto = Body(...)):
-    language = jsonable_encoder(language)
+    language = serialize(language)
     new_language = await add_language(language)
     return ResponseModel(new_language, "Language added successfully.")
 
@@ -48,7 +48,7 @@ async def get_languages():
 
 @router.put("/{id}")
 async def update_language_data(id: str, req: UpdateLanguageDto = Body(...)):
-    req = {k: v for k, v in req.dict().items() if v is not None}
+    req = {k: v for k, v in req.model_dump().items() if v is not None}
     updated_language = await update_language(id, req)
 
     if updated_language:

@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
 from ..database import *
-from .language_serializer import deserialize_language
+from .language_helper import deserialize_language
 
 
 async def retrieve_languages():

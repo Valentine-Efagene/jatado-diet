@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Body
-from fastapi.encoders import jsonable_encoder
-from ..common.schema import ResponseModel, ErrorResponseModel
+from fastapi import APIRouter, Body, Depends
+from ..common.schema import ResponseModel, ErrorResponseModel, ListQueryParams
+from ..common.serializer import serialize
 
 from .country_service import (
     add_country,
@@ -21,7 +21,7 @@ router = APIRouter()
 
 @router.post("/", response_description="Country data added into the database")
 async def add_country_data(country: CreateCountryDto = Body(...)):
-    country = jsonable_encoder(country)
+    country = serialize(country)
     new_country = await add_country(country)
     return ResponseModel(new_country, "Country added successfully.")
 
@@ -37,8 +37,8 @@ async def get_country_data(id):
 
 
 @router.get("/", response_description="Countries retrieved")
-async def get_countries():
-    countries = await retrieve_countries()
+async def get_countries(params: ListQueryParams = Depends()):
+    countries = await retrieve_countries(params)
 
     if countries:
         return ResponseModel(countries, "Countries data retrieved successfully")
@@ -48,7 +48,7 @@ async def get_countries():
 
 @router.put("/{id}")
 async def update_country_data(id: str, req: UpdateCountryDto = Body(...)):
-    req = {k: v for k, v in req.dict().items() if v is not None}
+    req = {k: v for k, v in req.model_dump().items() if v is not None}
     updated_country = await update_country(id, req)
 
     if updated_country:

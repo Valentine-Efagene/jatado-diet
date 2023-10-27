@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import BaseModel, Field
 from ..common.types import PyObjectId
 
@@ -39,15 +38,15 @@ class CreateLanguageDto(BaseModel):
 
 
 class UpdateLanguageDto(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
-    ethnicity_id: str = Field(None)
+    name: str | None = Field(None)
+    description: str | None = Field(None)
+    ethnicity_id: str | None = Field(None)
 
     model_config: {
         'schema_extra': {
             "example": {
                 "name": "Urhobo",
-                "description": "A language",
+                "description": "A popular language in Delta",
                 "ethnicity_id": "Ethnicity ID"
             }
         }}

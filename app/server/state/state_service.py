@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
 from ..database import *
-from .state_serializer import deserialize_state
+from .state_helper import deserialize_state
 
 
 async def retrieve_states():

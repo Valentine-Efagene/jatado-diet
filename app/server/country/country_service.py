@@ -1,10 +1,27 @@
 from bson.objectid import ObjectId
 from ..database import *
-from .country_serializer import deserialize_country
+from .country_helper import deserialize_country
+from ..common.schema import ListQueryParams
 
 
-async def retrieve_countries():
-    cursor = country_collection.find()
+async def retrieve_countries(params: ListQueryParams):
+    page = params.page
+    limit = params.limit
+    keyword = params.keyword
+
+    resPerPage = int(limit) if limit else int(
+        settings.pagination_limit)
+    currentPage = int(page) if page else 1
+    skip = resPerPage * (currentPage - 1)
+
+    search = {
+        "name": {
+            "$regex": keyword,
+            "$options": 'i',
+        },
+    } if keyword else {}
+
+    cursor = country_collection.find(search).limit(resPerPage).skip(skip)
     results = await cursor.to_list(None)
     countries = [deserialize_country(result) for result in results]
     return countries

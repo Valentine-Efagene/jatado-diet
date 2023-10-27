@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
 from ..database import *
-from .ethnicity_serializer import deserialize_ethnicity
+from .ethnicity_helper import deserialize_ethnicity
 
 
 async def retrieve_ethnicities():

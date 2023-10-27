@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body
-from fastapi.encoders import jsonable_encoder
+from ..common.serializer import serialize
 from ..common.schema import ResponseModel, ErrorResponseModel
 
 from .ethnicity_service import (
@@ -21,7 +21,7 @@ router = APIRouter()
 
 @router.post("/", response_description="ethnicity data added into the database")
 async def add_ethnicity_data(ethnicity: CreateEthnicityDto = Body(...)):
-    ethnicity = jsonable_encoder(ethnicity)
+    ethnicity = serialize(ethnicity)
     new_ethnicity = await add_ethnicity(ethnicity)
     return ResponseModel(new_ethnicity, "ethnicity added successfully.")
 
@@ -48,7 +48,7 @@ async def get_ethnicity_data(id):
 
 @router.put("/{id}")
 async def update_ethnicity_data(id: str, req: UpdateEthnicityDto = Body(...)):
-    req = {k: v for k, v in req.dict().items() if v is not None}
+    req = {k: v for k, v in req.model_dump().items() if v is not None}
     updated_ethnicity = await update_ethnicity(id, req)
 
     if updated_ethnicity:
