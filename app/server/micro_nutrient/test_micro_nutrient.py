@@ -4,13 +4,13 @@ from ..config import settings
 
 
 @pytest.mark.asyncio
-# Create macro_nutrient
+# Create macro nutrient
 async def test_micro_nutrient_crud(test_client, mongo_client):
     response = test_client.post(
         "/macro_nutrients/",
         json={
-            "name": "Nigeria",
-            "description": "Most populous macro_nutrient in africa",
+            "name": "Carbohydrate",
+            "description": "Energy foods",
         },
     )
 
@@ -22,8 +22,8 @@ async def test_micro_nutrient_crud(test_client, mongo_client):
     response = test_client.post(
         "/micro_nutrients/",
         json={
-            "name": "Delta",
-            "description": "Some people",
+            "name": "Carbohydrate",
+            "description": "Energy foods",
             "macro_nutrient_id": macro_nutrient_id
         },
     )
@@ -32,7 +32,7 @@ async def test_micro_nutrient_crud(test_client, mongo_client):
     data = response.json()['data']
     micro_nutrient_id = data['_id']
 
-    # Assert that the new micro nutrient has the right macro_nutrient ID
+    # Assert that the new micro nutrient has the right macro nutrient ID
     assert data['macro_nutrient_id'] == macro_nutrient_id
 
     response = test_client.get("/micro_nutrients/"+micro_nutrient_id)
@@ -60,8 +60,8 @@ async def test_get_micro_nutrients_paginated(test_client, mongo_client):
         response = test_client.post(
             "/micro_nutrients/",
             json={
-                "name": "Delta",
-                "description": "Multicultural micro_nutrient",
+                "name": "Carbohydrate",
+                "description": "Energy foods",
                 "macro_nutrient_id": '65392b337c2ebd6d003ddb4a'
             },
         )
@@ -71,8 +71,8 @@ async def test_get_micro_nutrients_paginated(test_client, mongo_client):
     response = test_client.post(
         "/micro_nutrients/",
         json={
-            "name": "Kaduna",
-            "description": "Very large and populous micro_nutrient",
+            "name": "Carbohydrate",
+            "description": "Energy foods",
             "macro_nutrient_id": '65392b337c2ebd6d003ddb4a'
         },
     )

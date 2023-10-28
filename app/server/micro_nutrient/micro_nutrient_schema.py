@@ -44,7 +44,7 @@ class UpdateMicroNutrientDto(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "description": "The economic capital of Nigeria",
+                "description": "Energy foods",
                 "macro_nutrient_id": "Country Id"
             }
         }

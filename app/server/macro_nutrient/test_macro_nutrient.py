@@ -8,8 +8,8 @@ async def test_create_macro_nutrient(test_client, mongo_client):
     response = test_client.post(
         "/macro_nutrients/",
         json={
-            "name": "Nigeria",
-            "description": "The most populous nation in Africa"
+            "name": "Carbohydrate",
+            "description": "Energy foods",
         },
     )
     data = response.json()['data']
@@ -36,8 +36,8 @@ async def test_get_macro_nutrients_paginated(test_client, mongo_client):
         response = test_client.post(
             "/macro_nutrients/",
             json={
-                "name": "Nigeria",
-                "description": "The most populous nation in Africa"
+                "name": "Carbohydrate",
+                "description": "Energy foods",
             },
         )
 
