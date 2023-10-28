@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, status
 from fastapi.encoders import jsonable_encoder
 from ..common.schema import ResponseModel, ErrorResponseModel
 from ..common.services import retrieve_list
@@ -22,7 +22,7 @@ from .lga_schema import (
 router = APIRouter()
 
 
-@router.post("/", response_description="lga data added into the database")
+@router.post("/", response_description="lga data added into the database", status_code=status.HTTP_201_CREATED, description="Description", summary="Summary")
 async def add_lga_data(lga: CreateLgaDto = Body(...)):
     lga = jsonable_encoder(lga)
     new_lga = await add_lga(lga)

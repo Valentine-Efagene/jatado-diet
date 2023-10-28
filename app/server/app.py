@@ -1,17 +1,22 @@
 from fastapi import FastAPI
 from .country.country_controller import router as CountryRouter
 from .state.state_controller import router as StateRouter
+from .user.user_controller import router as UserRouter
 from .lga.lga_controller import router as LgaRouter
 from .ethnicity.ethnicity_controller import router as EthnicityRouter
 from .language.language_controller import router as LanguageRouter
 from .macro_nutrient.macro_nutrient_controller import router as MacroNutrientRouter
 from .micro_nutrient.micro_nutrient_controller import router as MicroNutrientRouter
+from .auth.auth_controller import router as AuthRouter
 from .config import settings
 
 
 def create_application() -> FastAPI:
     app = FastAPI()
 
+    app.include_router(AuthRouter,
+                       prefix='/token', tags=['Log In'])
+    app.include_router(UserRouter, prefix='/users', tags=['User'])
     app.include_router(CountryRouter, prefix='/countries', tags=['Country'])
     app.include_router(StateRouter, prefix='/states', tags=['State'])
     app.include_router(LgaRouter, prefix='/lgas', tags=['LGA'])

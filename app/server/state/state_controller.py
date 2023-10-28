@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, status
 from ..common.serializer import serialize
 from ..common.schema import ListQueryParams
 from ..common.services import retrieve_list
@@ -23,7 +23,7 @@ from ..common.schema import ResponseModel, ErrorResponseModel
 router = APIRouter()
 
 
-@router.post("/", response_description="State data added into the database")
+@router.post("/", response_description="State data added into the database", status_code=status.HTTP_201_CREATED)
 async def add_state_data(state: CreateStateDto = Body(...)):
     state = serialize(state)
     new_state = await add_state(state)

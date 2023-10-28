@@ -32,6 +32,8 @@ database: AsyncIOMotorDatabase
 [client, database] = get_database_and_client(env)
 db_name = get_db_name(env)
 
+user_collection: AsyncIOMotorCollection = database.get_collection(
+    "users")
 country_collection: AsyncIOMotorCollection = database.get_collection(
     "countries")
 state_collection: AsyncIOMotorCollection = database.get_collection("states")

@@ -1,12 +1,14 @@
 
+from typing import Annotated
 from dataclasses import dataclass
-from fastapi import Query
+from fastapi import Query, Depends
+from fastapi.security import OAuth2PasswordBearer
 
 
-def ResponseModel(data, message):
+def ResponseModel(data, message, code: int = 200):
     return {
         "data": data,
-        "code": 200,
+        "code": code,
         "message": message,
     }
 

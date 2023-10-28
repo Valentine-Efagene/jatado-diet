@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, status
 from ..common.schema import ResponseModel, ErrorResponseModel, ListQueryParams
 from ..common.serializer import serialize
 from ..common.services import retrieve_list
 from ..database import country_collection
+from ..auth.auth_schema import OAuthTokenDeps
 from .country_helper import deserialize_country
 
 from .country_service import (
@@ -21,7 +22,7 @@ from .country_schema import (
 router = APIRouter()
 
 
-@router.post("/", response_description="Country data added into the database")
+@router.post("/", response_description="Country data added into the database",  status_code=status.HTTP_201_CREATED)
 async def add_country_data(country: CreateCountryDto = Body(...)):
     country = serialize(country)
     new_country = await add_country(country)
@@ -39,7 +40,7 @@ async def get_country_data(id):
 
 
 @router.get("/", response_description="Countries retrieved")
-async def get_countries(params: ListQueryParams = Depends()):
+async def get_countries(token: OAuthTokenDeps, params: ListQueryParams = Depends()):
     countries = await retrieve_list(params, country_collection, deserialize_country)
 
     if countries:
