@@ -1,30 +1,96 @@
-from fastapi import HTTPException, status
-from ..database import *
-from ..user.user_schema import User
-from .auth_schema import OAuthTokenDeps
-from bson import ObjectId
+from datetime import datetime, timedelta
+from typing import Annotated
+
+from fastapi import Depends,  HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+from pydantic import BaseModel, Field
+from ..database import user_collection
+from ..user.user_schema import User, UserInDB
+
+# to get a string like this run:
+# openssl rand -hex 32
+SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-def fake_decode_token(token: str):
-    return User(
-        _id=str(ObjectId()),
-        username=token + "fakedecoded",
-        email="john@example.com", firstName="John"
-    )
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 
-def fake_hash_password(password: str):
-    return "fakehashed"+password
+class TokenData(BaseModel):
+    username: str | None = Field(None)
 
 
-async def get_current_user(token: OAuthTokenDeps):
-    user = fake_decode_token(token)
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+
+async def get_user(username: str):
+    user_dict = await user_collection.find_one({'username': {
+        "$regex": username,
+        "$options": 'i',
+    }})
+
+    return UserInDB(**user_dict)
+
+
+async def authenticate_user(username: str, password: str):
+    user = await get_user(username)
 
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
+        return False
+    if not verify_password(password, user.hashed_password):
+        return False
     return user
+
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        token_data = TokenData(username=username)
+    except JWTError:
+        raise credentials_exception
+    user = await get_user(username=token_data.username)
+    if user is None:
+        raise credentials_exception
+    return user
+
+
+async def get_current_active_user(
+    current_user: Annotated[User, Depends(get_current_user)]
+):
+    if current_user.disabled:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user

@@ -6,29 +6,6 @@ from .user_schema import User, Status, Role
 from .user_helper import deserialize_user
 from ..auth.auth_service import get_current_user
 
-fake_users_db = {
-    "johndoe": {
-        "_id": str(ObjectId()),
-        "username": "johndoe",
-        "firstName": "John",
-        "lastName": "Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "fakehashedsecret",
-        "role": Role.STAFF,
-        "status": Status.ACTIVE,
-    },
-    "alice": {
-        "_id": str(ObjectId()),
-        "username": "alice",
-        "firstName": "Alice",
-        "lastName": "Wonderson",
-        "email": "alice@example.com",
-        "hashed_password": "fakehashedsecret2",
-        "role": Role.STAFF,
-        "status": Status.ACTIVE,
-    },
-}
-
 
 async def get_current_active_user(
     current_user: Annotated[User, Depends(get_current_user)]

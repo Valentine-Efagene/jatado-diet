@@ -27,10 +27,13 @@ class User(BaseModel):
         'arbitrary_types_allowed': True,
         'json_schema_extra': {
             "example": {
-                "username": str(ObjectId()),
-                "email": "janedoe@testmail.com",
-                "firstName": "Jane",
+                "_id": str(ObjectId()),
+                "username": "johndoe",
+                "firstName": "John",
                 "lastName": "Doe",
+                "email": "johndoe@example.com",
+                "role": Role.STAFF,
+                "status": Status.ACTIVE,
             },
         },
     }
@@ -44,11 +47,13 @@ class UserInDB(User):
         'json_schema_extra': {
             "example": {
                 "_id": str(ObjectId()),
-                "username": "jane",
-                "email": "janedoe@testmail.com",
-                "firstName": "Jane",
+                "username": "johndoe",
+                "firstName": "John",
                 "lastName": "Doe",
-                "hashed_password": "576e7a6767b6687f"
+                "email": "johndoe@example.com",
+                "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+                "role": Role.STAFF,
+                "status": Status.ACTIVE,
             },
         },
     }
@@ -61,15 +66,19 @@ class CreateUserDto(BaseModel):
     lastName: str | None = Field(None)
     role: str = Field(Role.STAFF)
     status: str = Field(Status.ACTIVE)
+    hashed_password: str
 
     model_config = {
         'arbitrary_types_allowed': True,
         'json_schema_extra': {
             "example": {
-                "username": "jane",
-                "email": "janedoe@testmail.com",
-                "firstName": "Jane",
+                "username": "johndoe",
+                "firstName": "John",
                 "lastName": "Doe",
+                "email": "johndoe@example.com",
+                "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+                "role": Role.STAFF,
+                "status": Status.ACTIVE,
             },
         },
     }
