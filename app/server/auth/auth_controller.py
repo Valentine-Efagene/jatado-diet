@@ -19,6 +19,14 @@ router = APIRouter()
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ):
+    """
+    This is the authentication route.  
+    Do not try to log in here. Instead, click on the 'Authorize'  
+    button at the top of the page
+
+    - **username**: Username for account
+    - **password**: Password
+    """
     user = await authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(

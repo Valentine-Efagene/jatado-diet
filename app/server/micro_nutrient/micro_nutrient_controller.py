@@ -25,6 +25,13 @@ router = APIRouter()
 
 @router.post("/", response_description="MicroNutrient data added into the database")
 async def add_micro_nutrient_data(micro_nutrient: CreateMicroNutrientDto = Body(...)):
+    """
+    Add a micro nutrient with the following information (See CreateMicroNutrientDto):
+
+    - **name**: Each micro nutrient must have a name
+    - **description**: A description
+    - **macro_nutrient_id**: Foreign Key
+    """
     micro_nutrient = serialize(micro_nutrient)
     new_micro_nutrient = await add_micro_nutrient(micro_nutrient)
     return ResponseModel(new_micro_nutrient, "micro_nutrient added successfully.")
@@ -52,6 +59,14 @@ async def get_micro_nutrient_data(id):
 
 @router.put("/{id}")
 async def update_micro_nutrient_data(id: str, req: UpdateMicroNutrientDto = Body(...)):
+    """
+    Update a micro nutrient (See UpdateMicroNutrientDto). 
+    Note that all fields are optional here, 
+    and you only provide what you intend to change.
+
+    - **name**: Each micro nutrient must have a name
+    - **description**: A description
+    """
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_micro_nutrient = await update_micro_nutrient(id, req)
 

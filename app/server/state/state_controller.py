@@ -25,6 +25,13 @@ router = APIRouter()
 
 @router.post("/", response_description="State data added into the database", status_code=status.HTTP_201_CREATED)
 async def add_state_data(state: CreateStateDto = Body(...)):
+    """
+    Add a state with the following information (See CreateStateDto):
+
+    - **name**: Each state must have a name
+    - **description**: A description
+    - **country_id**: Foreign key
+    """
     state = serialize(state)
     new_state = await add_state(state)
     return ResponseModel(new_state, "state added successfully.")
@@ -52,6 +59,14 @@ async def get_state_data(id):
 
 @router.put("/{id}")
 async def update_state_data(id: str, req: UpdateStateDto = Body(...)):
+    """
+    Update a country (See UpdateCountryDto). 
+    Note that all fields are optional here, 
+    and you only provide what you intend to change.
+
+    - **name**: Each country must have a name
+    - **description**: A description
+    """
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_state = await update_state(id, req)
 

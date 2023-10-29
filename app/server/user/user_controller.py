@@ -27,6 +27,16 @@ router = APIRouter()
 
 @router.post("/", response_description="User data added into the database")
 async def add_user_data(user: CreateUserDto = Body(...)):
+    """
+    Create a new user account (See CreateUserDto)
+
+    - **email**: Email of user
+    - **username**: Username of user
+    - **firstName**: First name of user
+    - **lastName**: Last name of user
+    - **role**: User role
+    - **status**: User status
+    """
     user = serialize(user)
     new_user = await add_user(user)
     return ResponseModel(new_user, "User added successfully.")
@@ -59,6 +69,16 @@ async def get_users(token: OAuthTokenDeps, params: ListQueryParams = Depends()):
 
 @router.put("/{id}")
 async def update_user_data(id: str, req: UpdateUserDto = Body(...)):
+    """
+    Update a user (See UpdateUserDto). 
+    Note that all fields are optional here, 
+    and you only provide what you intend to change.
+
+    - **firstName**: First name of user
+    - **lastName**: Last name of user
+    - **role**: User role
+    - **status**: User status
+    """
     req = {k: v for k, v in req.model_dump().items() if v is not None}
     updated_user = await update_user(id, req)
 

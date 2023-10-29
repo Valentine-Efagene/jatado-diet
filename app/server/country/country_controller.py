@@ -24,6 +24,12 @@ router = APIRouter()
 
 @router.post("/", response_description="Country data added into the database",  status_code=status.HTTP_201_CREATED)
 async def add_country_data(country: CreateCountryDto = Body(...)):
+    """
+    Add a country with the following information (See CreateCountryDto):
+
+    - **name**: Each country must have a name
+    - **description**: A description
+    """
     country = serialize(country)
     new_country = await add_country(country)
     return ResponseModel(new_country, "Country added successfully.")
@@ -51,6 +57,14 @@ async def get_countries(token: OAuthTokenDeps, params: ListQueryParams = Depends
 
 @router.put("/{id}")
 async def update_country_data(id: str, req: UpdateCountryDto = Body(...)):
+    """
+    Update a country (See UpdateCountryDto). 
+    Note that all fields are optional here, 
+    and you only provide what you intend to change.
+
+    - **name**: Each country must have a name
+    - **description**: A description
+    """
     req = {k: v for k, v in req.model_dump().items() if v is not None}
     updated_country = await update_country(id, req)
 

@@ -24,6 +24,13 @@ router = APIRouter()
 
 @router.post("/", response_description="ethnicity data added into the database")
 async def add_ethnicity_data(ethnicity: CreateEthnicityDto = Body(...)):
+    """
+    Add an ethnicity with the following information (See CreateEthnicityDto):
+
+    - **name**: Each ethnicity must have a name
+    - **description**: A description
+    - **lga_id**: Foreign key
+    """
     ethnicity = serialize(ethnicity)
     new_ethnicity = await add_ethnicity(ethnicity)
     return ResponseModel(new_ethnicity, "ethnicity added successfully.")
@@ -51,6 +58,14 @@ async def get_ethnicity_data(id):
 
 @router.put("/{id}")
 async def update_ethnicity_data(id: str, req: UpdateEthnicityDto = Body(...)):
+    """
+    Update an ethnicity (See UpdateEthnicityDto). 
+    Note that all fields are optional here, 
+    and you only provide what you intend to change.
+
+    - **name**: Each ethnicity must have a name
+    - **description**: A description
+    """
     req = {k: v for k, v in req.model_dump().items() if v is not None}
     updated_ethnicity = await update_ethnicity(id, req)
 

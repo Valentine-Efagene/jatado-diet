@@ -24,6 +24,13 @@ router = APIRouter()
 
 @router.post("/", response_description="Language data added into the database")
 async def add_language_data(language: CreateLanguageDto = Body(...)):
+    """
+    Add a language with the following information (See CreateLanguageDto):
+
+    - **name**: Each language must have a name
+    - **description**: A description
+    - **ethnicity_id**: Foreign key
+    """
     language = serialize(language)
     new_language = await add_language(language)
     return ResponseModel(new_language, "Language added successfully.")
@@ -51,6 +58,14 @@ async def get_languages(params: ListQueryParams = Depends()):
 
 @router.put("/{id}")
 async def update_language_data(id: str, req: UpdateLanguageDto = Body(...)):
+    """
+    Update a language (See UpdateLanguageDto). 
+    Note that all fields are optional here, 
+    and you only provide what you intend to change.
+
+    - **name**: Each language must have a name
+    - **description**: A description
+    """
     req = {k: v for k, v in req.model_dump().items() if v is not None}
     updated_language = await update_language(id, req)
 

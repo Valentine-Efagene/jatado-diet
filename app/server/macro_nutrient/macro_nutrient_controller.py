@@ -23,6 +23,12 @@ router = APIRouter()
 
 @router.post("/", response_description="MacroNutrient data added into the database")
 async def add_macro_nutrient_data(macro_nutrient: CreateMacroNutrientDto = Body(...)):
+    """
+    Add a macro nutrient with the following information (See CreateMacroNutrientDto):
+
+    - **name**: Each macro nutrient must have a name
+    - **description**: A description
+    """
     macro_nutrient = serialize(macro_nutrient)
     new_macro_nutrient = await add_macro_nutrient(macro_nutrient)
     return ResponseModel(new_macro_nutrient, "MacroNutrient added successfully.")
@@ -50,6 +56,14 @@ async def get_macro_nutrients(params: ListQueryParams = Depends()):
 
 @router.put("/{id}")
 async def update_macro_nutrient_data(id: str, req: UpdateMacroNutrientDto = Body(...)):
+    """
+    Update a macro nutrient (See UpdateMacroNutrientDto). 
+    Note that all fields are optional here, 
+    and you only provide what you intend to change.
+
+    - **name**: Each macro nutrient must have a name
+    - **description**: A description
+    """
     req = {k: v for k, v in req.model_dump().items() if v is not None}
     updated_macro_nutrient = await update_macro_nutrient(id, req)
 

@@ -24,6 +24,13 @@ router = APIRouter()
 
 @router.post("/", response_description="lga data added into the database", status_code=status.HTTP_201_CREATED, description="Description", summary="Summary")
 async def add_lga_data(lga: CreateLgaDto = Body(...)):
+    """
+    Add a LGA with the following information (See CreateLgaDto):
+
+    - **name**: Each LGA must have a name
+    - **description**: A description
+    - **country_id**: Foreign key
+    """
     lga = jsonable_encoder(lga)
     new_lga = await add_lga(lga)
     return ResponseModel(new_lga, "lga added successfully.")
@@ -51,6 +58,15 @@ async def get_lga_data(id):
 
 @router.put("/{id}")
 async def update_lga_data(id: str, req: UpdateLgaDto = Body(...)):
+    """
+    Update a LGA (See UpdateLgaDto). 
+    Note that all fields are optional here, 
+    and you only provide what you intend to change.
+
+    - **name**: Each LGA must have a name
+    - **description**: A description
+    - **state_id**: Foreign key
+    """
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_lga = await update_lga(id, req)
 
