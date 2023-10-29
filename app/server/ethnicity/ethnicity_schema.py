@@ -16,7 +16,9 @@ class EthnicitySchema(BaseModel):
             "example": {
                 "name": "Waffirians",
                 "description": "People of Warri",
-                "lga_id": "653a2e485c3ed608fd5c6d13"
+                "lga_id": "653a2e485c3ed608fd5c6d13",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             }
         },
         'arbitrary_types_allowed': True,
@@ -35,7 +37,9 @@ class CreateEthnicityDto(BaseModel):
             "example": {
                 "name": "Waffirians",
                 "description": "People of Warri",
-                "lga_id": "653a2e485c3ed608fd5c6d13"
+                "lga_id": "653a2e485c3ed608fd5c6d13",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             }
         },
     }

@@ -17,7 +17,9 @@ class StateSchema(BaseModel):
             "example": {
                 "name": "Lagos",
                 "description": "The economic capital of Nigeria",
-                "country_id": "Country ID"
+                "country_id": "Country ID",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             }
         },
     }
@@ -35,7 +37,9 @@ class CreateStateDto(BaseModel):
             "example": {
                 "name": "Lagos",
                 "description": "The economic capital of Nigeria",
-                "country_id": "Country Id"
+                "country_id": "Country Id",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             }
         },
     }
@@ -52,7 +56,7 @@ class UpdateStateDto(BaseModel):
             "example": {
                 "name": "Lagos",
                 "description": "The economic capital of Nigeria",
-                "country_id": "Country Id"
+                "country_id": "Country Id",
             }
         }
     }

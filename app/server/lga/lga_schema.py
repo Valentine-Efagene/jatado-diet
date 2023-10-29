@@ -16,7 +16,9 @@ class LgaSchema(BaseModel):
             "example": {
                 "name": "Ethiope East",
                 "description": "Has a Lga university (DELSU)",
-                "state_id": "State ID"
+                "state_id": "State ID",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             }
         },
         'arbitrary_types_allowed': True,
@@ -35,7 +37,9 @@ class CreateLgaDto(BaseModel):
             "example": {
                 "name": "Lagos",
                 "description": "The economic capital of Nigeria",
-                "state_id": "State ID"
+                "state_id": "State ID",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             }
         },
     }

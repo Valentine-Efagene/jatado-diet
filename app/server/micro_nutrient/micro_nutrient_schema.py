@@ -16,7 +16,9 @@ class MicroNutrientSchema(Nutrient):
             "example": {
                 "name": "Carbohydrate",
                 "description": "Energy foods",
-                "macro_nutrient_id": "653c159307e807c4b9b52a98"
+                "macro_nutrient_id": "653c159307e807c4b9b52a98",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             }
         },
     }
@@ -34,7 +36,9 @@ class CreateMicroNutrientDto(BaseModel):
             "example": {
                 "name": "Carbohydrate",
                 "description": "Energy foods",
-                "macro_nutrient_id": "653c159307e807c4b9b52a98"
+                "macro_nutrient_id": "653c159307e807c4b9b52a98",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             }
         },
     }

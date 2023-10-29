@@ -19,6 +19,8 @@ class CreateMacroNutrientDto(BaseModel):
             "example": {
                 "name": "Carbohydrate",
                 "description": "Energy foods",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             },
         },
     }

@@ -16,6 +16,8 @@ class CountrySchema(BaseModel):
             "example": {
                 "name": "Nigeria",
                 "description": "Most populous nation in Africa",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             },
         },
     }
@@ -33,6 +35,8 @@ class CreateCountryDto(BaseModel):
             "example": {
                 "name": "Nigeria",
                 "description": "Most populous nation in Africa",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             },
         },
     }

@@ -17,7 +17,9 @@ class Language(BaseModel):
             "example": {
                 "name": "Urhobo",
                 "description": "A language",
-                "ethnicity_id": "Ethnicity ID"
+                "ethnicity_id": "Ethnicity ID",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             },
         },
     }
@@ -36,7 +38,9 @@ class CreateLanguageDto(BaseModel):
             "example": {
                 "name": "Urhobo",
                 "description": "A language",
-                "ethnicity_id": "Ethnicity ID"
+                "ethnicity_id": "Ethnicity ID",
+                "created_at": str(datetime.now()),
+                "updated_at": str(datetime.now())
             },
         },
     }
