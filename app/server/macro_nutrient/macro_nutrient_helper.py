@@ -1,5 +1,5 @@
-from .macro_nutrient_schema import MacroNutrientSchema
+from .macro_nutrient_schema import MacroNutrient
 
 
 def deserialize_macro_nutrient(macro_nutrient) -> dict:
-    return MacroNutrientSchema(**macro_nutrient)
+    return MacroNutrient(**macro_nutrient)

@@ -9,32 +9,34 @@ from .macro_nutrient.macro_nutrient_controller import router as MacroNutrientRou
 from .micro_nutrient.micro_nutrient_controller import router as MicroNutrientRouter
 from .auth.auth_controller import router as AuthRouter
 from .config import settings
+from .common.enums import Tag
 
 
 def create_application() -> FastAPI:
     app = FastAPI()
 
     app.include_router(AuthRouter,
-                       prefix='/token', tags=['Log In'])
-    app.include_router(UserRouter, prefix='/users', tags=['User'])
-    app.include_router(CountryRouter, prefix='/countries', tags=['Country'])
-    app.include_router(StateRouter, prefix='/states', tags=['State'])
-    app.include_router(LgaRouter, prefix='/lgas', tags=['LGA'])
+                       prefix='/token', tags=[Tag.AUTHENTICATION])
+    app.include_router(UserRouter, prefix='/users', tags=[Tag.USER])
+    app.include_router(CountryRouter, prefix='/countries', tags=[Tag.COUNTRY])
+    app.include_router(StateRouter, prefix='/states', tags=[Tag.STATE])
+    app.include_router(LgaRouter, prefix='/lgas', tags=[Tag.LGA])
     app.include_router(
-        EthnicityRouter, prefix='/ethnicities', tags=['Ethnicity'])
-    app.include_router(LanguageRouter, prefix='/languages', tags=['Language'])
+        EthnicityRouter, prefix='/ethnicities', tags=[Tag.ETHNICITY])
+    app.include_router(LanguageRouter, prefix='/languages',
+                       tags=[Tag.LANGUAGE])
     app.include_router(MacroNutrientRouter,
-                       prefix='/macro_nutrients', tags=['Macro Nutrients'])
+                       prefix='/macro_nutrients', tags=[Tag.MACRO_NUTRIENT])
     app.include_router(MicroNutrientRouter,
-                       prefix='/micro_nutrients', tags=['Micro Nutrients'])
+                       prefix='/micro_nutrients', tags=[Tag.MICRO_NUTRIENT])
 
-    @app.get('/', tags=['Root'])
+    @app.get('/', tags=[Tag.MISC])
     async def read_root():
         return {
             "message": "Welcome to this fantastic app!"
         }
 
-    @app.get("/info")
+    @app.get("/info", tags=[Tag.MISC])
     async def info():
         return {
             "app_name": settings.app_name,

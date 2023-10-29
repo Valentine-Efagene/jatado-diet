@@ -1,22 +1,9 @@
-from typing import Optional
 from pydantic import BaseModel, Field
-from ..common.types import PyObjectId
+from ..common.schema import Nutrient
 
 
-class MacroNutrientSchema(BaseModel):
-    id: PyObjectId = Field(alias='_id')
-    name: str = Field(...)
-    description: str = Field(None)
-
-    model_config = {
-        'arbitrary_types_allowed': True,
-        'json_schema_extra': {
-            "example": {
-                "name": "Carbohydrate",
-                "description": "Energy foods",
-            },
-        },
-    }
+class MacroNutrient(Nutrient):
+    pass
 
 
 class CreateMacroNutrientDto(BaseModel):

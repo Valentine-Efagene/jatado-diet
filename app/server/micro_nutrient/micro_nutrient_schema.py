@@ -1,12 +1,11 @@
 from typing import Optional
 from pydantic import BaseModel, Field
 from ..common.types import PyObjectId
+from ..common.schema import Nutrient
 
 
-class MicroNutrientSchema(BaseModel):
+class MicroNutrientSchema(Nutrient):
     id: PyObjectId = Field(alias='_id')
-    name: str = Field(...)
-    description: str = Field(None)
     macro_nutrient_id: str = Field(...)
 
     model_config = {
