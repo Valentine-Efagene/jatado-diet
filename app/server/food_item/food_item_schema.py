@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from ..common.types import PyObjectId
 
 
-class CountrySchema(BaseModel):
+class FoodItem(BaseModel):
     id: PyObjectId = Field(alias='_id')
     name: str = Field(...)
     description: str = Field(None)
@@ -21,9 +21,29 @@ class CountrySchema(BaseModel):
     }
 
 
-class CreateCountryDto(BaseModel):
+class FoodItemAndQuantity:
+    food_item_id: str
+    quantity: float
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    created_at: datetime | None = Field(datetime.now())
+    updated_at: datetime | None = Field(datetime.now())
+
+
+class FoodItemHydratedAndQuantity:
+    food_item: FoodItem
+    quantity: float
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    created_at: datetime | None = Field(datetime.now())
+    updated_at: datetime | None = Field(datetime.now())
+
+
+class CreateFoodItemDto(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
+    quantity: int = Field(...)
+    food_item: FoodItem = Field(...)
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 
@@ -38,7 +58,7 @@ class CreateCountryDto(BaseModel):
     }
 
 
-class UpdateCountryDto(BaseModel):
+class UpdateFoodItemDto(BaseModel):
     name: str | None = Field(None)
     description: str | None = Field(None)
     updated_at: datetime | None = Field(datetime.now())

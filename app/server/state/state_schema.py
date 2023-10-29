@@ -1,4 +1,4 @@
-from typing import Optional
+from datetime import datetime
 from pydantic import BaseModel, Field
 from ..common.types import PyObjectId
 
@@ -8,6 +8,8 @@ class StateSchema(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
     country_id: str = Field(...)
+    created_at: datetime | None = Field(datetime.now())
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         'arbitrary_types_allowed': True,
@@ -25,6 +27,8 @@ class CreateStateDto(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
     country_id: str = Field(None)
+    created_at: datetime | None = Field(datetime.now())
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         "json_schema_extra": {
@@ -38,8 +42,10 @@ class CreateStateDto(BaseModel):
 
 
 class UpdateStateDto(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
+    name: str | None = Field(None)
+    description: str | None = Field(None)
+    country_id: str | None = Field(None)
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         "json_schema_extra": {

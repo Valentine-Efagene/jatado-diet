@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, Field
 from ..common.types import PyObjectId
 
@@ -7,6 +8,8 @@ class Language(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
     ethnicity_id: str = Field(None)
+    created_at: datetime | None = Field(datetime.now())
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         'arbitrary_types_allowed': True,
@@ -24,6 +27,8 @@ class CreateLanguageDto(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
     ethnicity_id: str = Field(None)
+    created_at: datetime | None = Field(datetime.now())
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         'arbitrary_types_allowed': True,
@@ -41,6 +46,7 @@ class UpdateLanguageDto(BaseModel):
     name: str | None = Field(None)
     description: str | None = Field(None)
     ethnicity_id: str | None = Field(None)
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config: {
         'schema_extra': {

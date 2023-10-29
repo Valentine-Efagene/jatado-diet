@@ -46,3 +46,5 @@ macro_nutrient_collection: AsyncIOMotorCollection = database.get_collection(
     "macro_nutrients")
 micro_nutrient_collection: AsyncIOMotorCollection = database.get_collection(
     "micro_nutrients")
+food_item_collection: AsyncIOMotorCollection = database.get_collection(
+    "food_items")

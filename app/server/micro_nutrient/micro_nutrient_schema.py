@@ -1,4 +1,4 @@
-from typing import Optional
+from datetime import datetime
 from pydantic import BaseModel, Field
 from ..common.types import PyObjectId
 from ..common.schema import Nutrient
@@ -7,6 +7,8 @@ from ..common.schema import Nutrient
 class MicroNutrientSchema(Nutrient):
     id: PyObjectId = Field(alias='_id')
     macro_nutrient_id: str = Field(...)
+    created_at: datetime | None = Field(datetime.now())
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         'arbitrary_types_allowed': True,
@@ -24,6 +26,8 @@ class CreateMicroNutrientDto(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
     macro_nutrient_id: str = Field(None)
+    created_at: datetime | None = Field(datetime.now())
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         "json_schema_extra": {
@@ -37,8 +41,9 @@ class CreateMicroNutrientDto(BaseModel):
 
 
 class UpdateMicroNutrientDto(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
+    name: str | None = Field(None)
+    description: str | None = Field(None)
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         "json_schema_extra": {

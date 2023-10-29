@@ -1,4 +1,4 @@
-from typing import Optional
+from datetime import datetime
 from pydantic import BaseModel, Field
 from ..common.types import PyObjectId
 
@@ -8,6 +8,8 @@ class EthnicitySchema(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
     lga_id: str = Field(None)
+    created_at: datetime | None = Field(datetime.now())
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         "json_schema_extra": {
@@ -25,6 +27,8 @@ class CreateEthnicityDto(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
     lga_id: str = Field(None)
+    created_at: datetime | None = Field(datetime.now())
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         "json_schema_extra": {
@@ -40,6 +44,7 @@ class CreateEthnicityDto(BaseModel):
 class UpdateEthnicityDto(BaseModel):
     name: str | None = Field(None)
     description: str | None = Field(None)
+    updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         "json_schema_extra": {

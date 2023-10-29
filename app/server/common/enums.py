@@ -12,3 +12,4 @@ class Tag(str, Enum):
     LANGUAGE = 'Language'
     MACRO_NUTRIENT = 'Macro Nutrients'
     MICRO_NUTRIENT = 'Micro Nutrients'
+    FOOD_ITEM = 'Food Item'

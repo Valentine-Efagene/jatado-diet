@@ -8,6 +8,7 @@ from .language.language_controller import router as LanguageRouter
 from .macro_nutrient.macro_nutrient_controller import router as MacroNutrientRouter
 from .micro_nutrient.micro_nutrient_controller import router as MicroNutrientRouter
 from .auth.auth_controller import router as AuthRouter
+from .food_item.food_item_controller import router as FoodItemRouter
 from .config import settings
 from .common.enums import Tag
 
@@ -29,6 +30,8 @@ def create_application() -> FastAPI:
                        prefix='/macro_nutrients', tags=[Tag.MACRO_NUTRIENT])
     app.include_router(MicroNutrientRouter,
                        prefix='/micro_nutrients', tags=[Tag.MICRO_NUTRIENT])
+    app.include_router(FoodItemRouter,
+                       prefix='/food_item', tags=[Tag.FOOD_ITEM])
 
     @app.get('/', tags=[Tag.MISC])
     async def read_root():
