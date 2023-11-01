@@ -6,7 +6,8 @@ from ..common.schema import Nutrient
 
 class NutrientSchema(Nutrient):
     id: PyObjectId = Field(alias='_id')
-    macro_nutrient_id: str = Field(...)
+    macro_id: str = Field(None)
+    is_macro: bool = Field(...)
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 
@@ -27,9 +28,8 @@ class NutrientSchema(Nutrient):
 class CreateNutrientDto(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
-    nutrient_id: str = Field(None)
     is_macro: bool = Field(...)
-    macro_id: str = Field(...)
+    macro_id: str | None = Field(None)
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 
@@ -50,6 +50,7 @@ class UpdateNutrientDto(BaseModel):
     name: str | None = Field(None)
     description: str | None = Field(None)
     macro_id: str | None = Field(None)
+    is_macro: bool | None = Field(...)
     updated_at: datetime | None = Field(datetime.now())
 
     model_config = {

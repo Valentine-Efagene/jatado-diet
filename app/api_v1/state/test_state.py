@@ -1,4 +1,5 @@
 import pytest
+from fastapi import status
 
 from ..config import settings
 
@@ -14,7 +15,7 @@ async def test_state_crud(test_client, mongo_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_201_CREATED
     data = response.json()['data']
     country_id = data['_id']
 
@@ -28,7 +29,7 @@ async def test_state_crud(test_client, mongo_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_201_CREATED
     data = response.json()['data']
     state_id = data['_id']
 
@@ -66,7 +67,7 @@ async def test_get_states_paginated(test_client, mongo_client):
             },
         )
 
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_201_CREATED
 
     response = test_client.post(
         "/states/",
@@ -77,7 +78,7 @@ async def test_get_states_paginated(test_client, mongo_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_201_CREATED
 
     response = test_client.get("/states?limit=3&page=1&keyword=Kaduna")
     assert response.status_code == 200

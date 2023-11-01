@@ -31,7 +31,7 @@ def create_application() -> FastAPI:
     app.include_router(MicroNutrientRouter,
                        prefix='/micro_nutrients', tags=[Tag.MICRO_NUTRIENT])
     app.include_router(FoodItemRouter,
-                       prefix='/food_item', tags=[Tag.FOOD_ITEM])
+                       prefix='/food_items', tags=[Tag.FOOD_ITEM])
 
     @app.get('/', tags=[Tag.MISC])
     async def read_root():

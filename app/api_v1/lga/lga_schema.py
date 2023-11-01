@@ -3,11 +3,11 @@ from pydantic import BaseModel, Field
 from ..common.types import PyObjectId
 
 
-class LgaSchema(BaseModel):
+class Lga(BaseModel):
     id: PyObjectId = Field(alias='_id')
     name: str = Field(...)
     description: str = Field(None)
-    state_id: str = Field(None)
+    state_id: str = Field(...)
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 

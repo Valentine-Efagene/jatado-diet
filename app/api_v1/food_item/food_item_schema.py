@@ -1,12 +1,30 @@
 from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import List
+from bson import ObjectId
+from ..language.language_schema import Language
 from ..common.schema import Nutrient
 from ..common.types import PyObjectId
+from ..common.serializer import serialize
 
 
 class Name(BaseModel):
     language_id: str
+    name: str
+
+
+class NutrientAndQuantity(BaseModel):
+    nutrient_id: str
+    quantity: float
+
+
+class NutrientHydratedAndQuantity(BaseModel):
+    nutrient: Nutrient
+    quantity: float
+
+
+class NameHydrated(BaseModel):
+    language: Language
     name: str
 
 
@@ -15,7 +33,7 @@ class FoodItem(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
     names: List[Name] = Field([])
-    nutrients: List[Nutrient] = Field([])
+    nutrients: List[NutrientAndQuantity] = Field([])
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 
@@ -30,22 +48,12 @@ class FoodItem(BaseModel):
     }
 
 
-class NutrientAndQuantity:
-    nutrient_id: str
-    quantity: float
-
-
-class NutrientHydratedAndQuantity:
-    nutrient: Nutrient
-    quantity: float
-
-
-class CreateFoodItemDto(BaseModel):
+class FoodItemHydrated(BaseModel):
+    id: PyObjectId = Field(alias='_id')
     name: str = Field(...)
     description: str = Field(None)
-    quantity: int = Field(...)
-    names: List[Name] = Field([])
-    nutrients: List[Nutrient] = Field([])
+    names: List[NameHydrated] = Field([])
+    nutrients: List[NutrientHydratedAndQuantity] = Field([])
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 
@@ -55,6 +63,39 @@ class CreateFoodItemDto(BaseModel):
             "example": {
                 "name": "Nigeria",
                 "description": "Most populous nation in Africa",
+            },
+        },
+    }
+
+
+class CreateFoodItemDto(BaseModel):
+    name: str = Field(...)
+    description: str | None = Field(None)
+    quantity: int = Field(...)
+    names: List[Name] = Field([])
+    nutrients: List[NutrientAndQuantity] = Field([])
+    created_at: datetime | None = Field(datetime.now())
+    updated_at: datetime | None = Field(datetime.now())
+
+    model_config = {
+        'arbitrary_types_allowed': True,
+        'json_schema_extra': {
+            "example": {
+                "name": "Beef",
+                "description": "Cattle meat",
+                "quantity": 5,
+                "names": [
+                    {
+                        'name': 'beef',
+                        'language_id': str(ObjectId())
+                    }
+                ],
+                "nutrients": [
+                    {
+                        'nutrient_id': str(ObjectId()),
+                        'quantity': 50
+                    }
+                ],
             },
         },
     }

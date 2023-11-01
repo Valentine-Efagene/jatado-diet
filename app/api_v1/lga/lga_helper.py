@@ -1,5 +1,5 @@
-from .lga_schema import LgaSchema
+from .lga_schema import Lga
 
 
 def deserialize_lga(lga) -> dict:
-    return LgaSchema(**lga)
+    return Lga(**lga)

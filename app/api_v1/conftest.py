@@ -40,4 +40,5 @@ async def mongo_client():
     client: AsyncIOMotorClient
     database: AsyncIOMotorDatabase
     [client, database] = get_database_and_client(env)
+    client.drop_database(settings.mongodb_test_db_name)
     yield client

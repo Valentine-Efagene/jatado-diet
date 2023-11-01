@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, status
 from ..common.serializer import serialize
 from ..common.schema import ResponseModel, ErrorResponseModel
 from ..common.services import retrieve_list
@@ -23,7 +23,7 @@ from .ethnicity_schema import (
 router = APIRouter()
 
 
-@router.post("/", response_description="ethnicity data added into the database")
+@router.post("/", response_description="ethnicity data added into the database", status_code=status.HTTP_201_CREATED)
 async def add_ethnicity_data(token: OAuthTokenDeps, ethnicity: CreateEthnicityDto = Body(...)):
     """
     Add an ethnicity with the following information (See CreateEthnicityDto):

@@ -1,6 +1,7 @@
 import pytest
-from ..config import settings
+from fastapi import status
 from bson import ObjectId
+from ..config import settings
 
 
 @pytest.mark.asyncio
@@ -15,7 +16,7 @@ async def test_ethnicity_crud(test_client, mongo_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_201_CREATED
     data = response.json()['data']
     lga_id = data['_id']
 
@@ -29,7 +30,7 @@ async def test_ethnicity_crud(test_client, mongo_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_201_CREATED
     data = response.json()['data']
     ethnicity_id = data['_id']
 
