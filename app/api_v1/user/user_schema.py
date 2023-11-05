@@ -66,7 +66,7 @@ class CreateUserDto(BaseModel):
     lastName: str | None = Field(None)
     role: str = Field(Role.STAFF)
     status: str = Field(Status.ACTIVE)
-    hashed_password: str
+    password: str
 
     model_config = {
         'arbitrary_types_allowed': True,
@@ -76,7 +76,7 @@ class CreateUserDto(BaseModel):
                 "firstName": "John",
                 "lastName": "Doe",
                 "email": "johndoe@example.com",
-                "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+                "password": "secret",
                 "role": Role.STAFF,
                 "status": Status.ACTIVE,
             },

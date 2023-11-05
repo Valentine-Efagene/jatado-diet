@@ -4,7 +4,7 @@ from bson.objectid import ObjectId
 from ..database import *
 from .user_schema import User, Status, Role
 from .user_helper import deserialize_user
-from ..auth.auth_service import get_current_user
+from ..auth.auth_service import get_current_user, get_password_hash
 
 
 async def get_current_active_user(
@@ -26,6 +26,8 @@ async def retrieve_user(id: str) -> dict:
 
 
 async def add_user(data: dict) -> dict:
+    password = data['password']
+    data['hashed_password'] = get_password_hash(password)
     user = await user_collection.insert_one(data)
     new_user = await user_collection.find_one({"_id": user.inserted_id})
     return deserialize_user(new_user)

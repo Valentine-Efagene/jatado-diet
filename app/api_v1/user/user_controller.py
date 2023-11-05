@@ -36,6 +36,7 @@ async def add_user_data(user: CreateUserDto = Body(...)):
     - **lastName**: Last name of user
     - **role**: User role
     - **status**: User status
+    - **password**: User password
     """
     user = serialize(user)
     new_user = await add_user(user)
