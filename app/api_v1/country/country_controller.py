@@ -4,7 +4,7 @@ from ..common.serializer import serialize
 from ..common.services import retrieve_list
 from ..auth.auth_schema import OAuthTokenDeps
 from .country_helper import deserialize_country
-from ..database import get_database
+from ..database import get_database, get_country_collection
 
 from .country_service import (
     add_country,
@@ -46,7 +46,8 @@ async def get_country_data(token: OAuthTokenDeps, id: str, database=Depends(get_
 
 
 @router.get("/", response_description="Countries retrieved")
-async def get_countries(token: OAuthTokenDeps, params: ListQueryParams = Depends()):
+async def get_countries(token: OAuthTokenDeps, params: ListQueryParams = Depends(), database=Depends(get_database)):
+    country_collection = get_country_collection(database)
     countries = await retrieve_list(params, country_collection, deserialize_country)
 
     if countries:

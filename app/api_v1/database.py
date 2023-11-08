@@ -21,6 +21,12 @@ async def get_database():
     return client[name]
 
 
+async def get_test_database():
+    name = get_db_name(Environment.TEST)
+    client = get_test_database_client()
+    return client[name]
+
+
 async def initialize_database() -> AsyncIOMotorDatabase:
     global env
     global database
@@ -54,22 +60,8 @@ async def close_database_connection():
     print('Connection Closed')
 
 
-def get_database_and_client(env: str) -> AsyncIOMotorDatabase:
-    if env == Environment.DEVELOPMENT:
-        client = AsyncIOMotorClient(settings.mongodb_dev_uri)
-        database = client[settings.mongodb_dev_db_name]
-    elif env == Environment.PRODUCTION:
-        client = AsyncIOMotorClient(settings.mongodb_prod_uri)
-        database = client[settings.mongodb_prod_db_name]
-    else:
-        client = AsyncIOMotorClient(settings.mongodb_test_uri)
-        database = client[settings.mongodb_test_db_name]
-
-    return [client, database]
-
-
-[client, database] = get_database_and_client(env)
-db_name = get_db_name(env)
+def get_test_database_client() -> AsyncIOMotorDatabase:
+    return AsyncIOMotorClient(settings.mongodb_test_uri)
 
 
 def get_user_collection(database: AsyncIOMotorDatabase) -> AsyncIOMotorCollection:

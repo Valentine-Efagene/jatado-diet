@@ -26,6 +26,8 @@ def create_application() -> FastAPI:
     app.include_router(CountryRouter, prefix='/countries', tags=[Tag.COUNTRY])
     app.include_router(StateRouter, prefix='/states', tags=[Tag.STATE])
     app.include_router(LgaRouter, prefix='/lgas', tags=[Tag.LGA])
+    app.include_router(NutrientRouter, prefix='/nutrients',
+                       tags=[Tag.NUTRIENT])
     app.include_router(
         EthnicityRouter, prefix='/ethnicities', tags=[Tag.ETHNICITY])
     app.include_router(LanguageRouter, prefix='/languages',

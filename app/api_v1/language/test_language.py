@@ -1,6 +1,7 @@
 import pytest
 from ..config import settings
 from bson import ObjectId
+from fastapi import status
 
 from ..config import settings
 
@@ -17,7 +18,7 @@ async def test_language_crud(test_client, mongo_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_201_CREATED
     data = response.json()['data']
     ethnicity_id = data['_id']
 
@@ -31,7 +32,7 @@ async def test_language_crud(test_client, mongo_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_201_CREATED
     data = response.json()['data']
     language_id = data['_id']
 

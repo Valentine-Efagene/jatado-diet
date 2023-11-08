@@ -32,13 +32,13 @@ async def add_food_item_data(token: OAuthTokenDeps, food_item: CreateFoodItemDto
     - **description**: A description
     """
     food_item = serialize(food_item)
-    new_food_item = await add_food_item(food_item)
+    new_food_item = await add_food_item(database, food_item)
     return ResponseModel(new_food_item, "FoodItem added successfully.")
 
 
 @router.get("/{id}", response_description="Food Item data retrieved")
 async def get_food_item_data(token: OAuthTokenDeps, id: str, database=Depends(get_database)):
-    food_item = await retrieve_food_item(id)
+    food_item = await retrieve_food_item(database, id)
 
     if food_item:
         return ResponseModel(food_item, "Food Item data retrieved successfully")

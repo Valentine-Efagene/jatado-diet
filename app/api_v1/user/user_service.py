@@ -19,17 +19,19 @@ async def get_current_active_user(
 # Retrieve a user with a matching ID
 
 
-async def retrieve_user(id: str) -> dict:
+async def retrieve_user(database: AsyncIOMotorDatabase, id: str) -> dict:
+    user_collection = get_user_collection(database)
     user = await user_collection.find_one({"_id": ObjectId(id)})
 
     if user:
         return deserialize_user(user)
 
 
-async def add_user(data: dict) -> dict:
+async def add_user(database: AsyncIOMotorDatabase, data: dict) -> dict:
     password = data['password']
     data['password_hash'] = get_password_hash(password)
     del data['password']
+    user_collection = get_user_collection(database)
     user = await user_collection.insert_one(data)
     new_user = await user_collection.find_one({"_id": user.inserted_id})
     return deserialize_user(new_user)
@@ -37,11 +39,12 @@ async def add_user(data: dict) -> dict:
 # Update a user with a matching ID
 
 
-async def update_user(id: str, data: dict):
+async def update_user(database: AsyncIOMotorDatabase, id: str, data: dict):
     # Return false if an empty request body is sent.
     if len(data) < 1:
         return False
 
+    user_collection = get_user_collection(database)
     user = await user_collection.find_one({"_id": ObjectId(id)})
 
     if user:
@@ -57,7 +60,8 @@ async def update_user(id: str, data: dict):
 # Delete a user from the database
 
 
-async def delete_user(id: str):
+async def delete_user(database: AsyncIOMotorDatabase, id: str):
+    user_collection = get_user_collection(database)
     user = await user_collection.find_one({"_id": ObjectId(id)})
 
     if user:

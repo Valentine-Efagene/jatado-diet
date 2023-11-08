@@ -1,4 +1,5 @@
 import pytest
+from fastapi import status
 from bson import ObjectId
 from ..config import settings
 
@@ -15,7 +16,7 @@ async def test_lga_crud(test_client, mongo_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_201_CREATED
     data = response.json()['data']
     state_id = data['_id']
 
@@ -29,7 +30,7 @@ async def test_lga_crud(test_client, mongo_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_201_CREATED
     data = response.json()['data']
     lga_id = data['_id']
 
@@ -62,6 +63,8 @@ async def test_get_lgas_paginated(test_client, mongo_client):
             },
         )
 
+        assert response.status_code == status.HTTP_201_CREATED
+
     response = test_client.post(
         "/lgas/",
         json={
@@ -70,6 +73,8 @@ async def test_get_lgas_paginated(test_client, mongo_client):
             "state_id": str(ObjectId())
         },
     )
+
+    assert response.status_code == status.HTTP_201_CREATED
 
     response = test_client.get("/lgas?limit=3&page=1&keyword=Uvwie")
     assert response.status_code == 200

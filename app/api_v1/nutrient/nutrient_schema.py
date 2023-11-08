@@ -6,7 +6,7 @@ from ..common.schema import Nutrient
 
 class NutrientSchema(Nutrient):
     id: PyObjectId = Field(alias='_id')
-    macro_id: str = Field(None)
+    macro_id: str | None = Field(None)
     is_macro: bool = Field(...)
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
@@ -38,6 +38,7 @@ class CreateNutrientDto(BaseModel):
             "example": {
                 "name": "Carbohydrate",
                 "description": "Energy foods",
+                "is_macro": False,
                 "macro_id": "653c159307e807c4b9b52a98",
                 "created_at": str(datetime.now()),
                 "updated_at": str(datetime.now())

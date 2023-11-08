@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, status
 from ..common.serializer import serialize
 from ..common.services import retrieve_list
 from ..database import get_language_collection, get_database
@@ -23,7 +23,7 @@ from .language_schema import (
 router = APIRouter()
 
 
-@router.post("/", response_description="Language data added into the database")
+@router.post("/", response_description="Language data added into the database",  status_code=status.HTTP_201_CREATED)
 async def add_language_data(token: OAuthTokenDeps, language: CreateLanguageDto = Body(...), database=Depends(get_database)):
     """
     Add a language with the following information (See CreateLanguageDto):
@@ -39,7 +39,7 @@ async def add_language_data(token: OAuthTokenDeps, language: CreateLanguageDto =
 
 @router.get("/{id}", response_description="Language data retrieved")
 async def get_language_data(token: OAuthTokenDeps, id: str, database=Depends(get_database)):
-    language = await retrieve_language(id)
+    language = await retrieve_language(database, id)
 
     if language:
         return ResponseModel(language, "Language data retrieved successfully")

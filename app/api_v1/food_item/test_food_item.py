@@ -69,4 +69,4 @@ async def test_get_food_items_paginated(test_client, mongo_client):
     assert len(data) == 20
 
     # Teardown
-    # mongo_client.drop_database(settings.mongodb_test_db_name)
+    mongo_client.drop_database(settings.mongodb_test_db_name)

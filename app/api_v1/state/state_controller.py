@@ -50,8 +50,8 @@ async def get_states(token: OAuthTokenDeps, params: ListQueryParams = Depends(),
 
 
 @router.get("/{id}", response_description="state data retrieved")
-async def get_state_data(token: OAuthTokenDeps, id: str):
-    state = await retrieve_state(id)
+async def get_state_data(token: OAuthTokenDeps, id: str, database=Depends(get_database)):
+    state = await retrieve_state(database, id)
 
     if state:
         return ResponseModel(state, "state data retrieved successfully")
@@ -60,7 +60,7 @@ async def get_state_data(token: OAuthTokenDeps, id: str):
 
 
 @router.put("/{id}")
-async def update_state_data(token: OAuthTokenDeps, id: str, req: UpdateStateDto = Body(...)):
+async def update_state_data(token: OAuthTokenDeps, id: str, req: UpdateStateDto = Body(...), database=Depends(get_database)):
     """
     Update a country (See UpdateCountryDto). 
     Note that all fields are optional here, 
@@ -70,7 +70,7 @@ async def update_state_data(token: OAuthTokenDeps, id: str, req: UpdateStateDto 
     - **description**: A description
     """
     req = {k: v for k, v in req.dict().items() if v is not None}
-    updated_state = await update_state(id, req)
+    updated_state = await update_state(database, id, req)
 
     if updated_state:
         return ResponseModel(
@@ -85,8 +85,8 @@ async def update_state_data(token: OAuthTokenDeps, id: str, req: UpdateStateDto 
 
 
 @router.delete("/{id}", response_description="state data deleted from the database")
-async def delete_state_data(token: OAuthTokenDeps, id: str):
-    deleted_state = await delete_state(id)
+async def delete_state_data(token: OAuthTokenDeps, id: str, database=Depends(get_database)):
+    deleted_state = await delete_state(database, id)
     if deleted_state:
         return ResponseModel(
             "state with ID: {} removed".format(
