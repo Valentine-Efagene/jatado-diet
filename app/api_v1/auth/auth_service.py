@@ -6,12 +6,13 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel, Field
-from ..database import user_collection
+from ..database import get_user_collection, get_database
 from ..user.user_schema import User, UserInDB
 from ..config import settings
 from .auth_schema import OAuthTokenDeps
 from ..user.user_schema import Role, Status
 from bson import ObjectId
+from motor.motor_asyncio import AsyncIOMotorDatabase
 
 # to get a string like this run:
 # openssl rand -hex 32
@@ -34,8 +35,8 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_password(plain_password, password_hash):
+    return pwd_context.verify(plain_password, password_hash)
 
 
 def get_password_hash(password: str):
@@ -50,7 +51,8 @@ def get_password_hash(password: str):
     return pwd_context.hash(password)
 
 
-async def get_user(username: str):
+async def get_user(database: AsyncIOMotorDatabase, username: str):
+    user_collection = get_user_collection(database)
     user_dict = await user_collection.find_one({'username': {
         "$regex": username,
         "$options": 'i',
@@ -59,12 +61,12 @@ async def get_user(username: str):
     return UserInDB(**user_dict)
 
 
-async def authenticate_user(username: str, password: str):
-    user = await get_user(username)
+async def authenticate_user(database: AsyncIOMotorDatabase, username: str, password: str):
+    user = await get_user(database, username)
 
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user.password_hash):
         return False
     return user
 
@@ -89,11 +91,11 @@ async def mock_get_current_user(token: OAuthTokenDeps):
         email="janedoe@testmail.com",
         status=Status.ACTIVE,
         role=Role.STAFF,
-        hashed_password=get_password_hash('secret')
+        password_hash=get_password_hash('secret')
     )
 
 
-async def get_current_user(token: OAuthTokenDeps) -> UserInDB:
+async def get_current_user(token: OAuthTokenDeps, database=Depends(get_database)) -> UserInDB:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -107,7 +109,7 @@ async def get_current_user(token: OAuthTokenDeps) -> UserInDB:
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = await get_user(username=token_data.username)
+    user = await get_user(database, username=token_data.username)
     if user is None:
         raise credentials_exception
     return user

@@ -5,16 +5,20 @@ from .user.user_controller import router as UserRouter
 from .lga.lga_controller import router as LgaRouter
 from .ethnicity.ethnicity_controller import router as EthnicityRouter
 from .language.language_controller import router as LanguageRouter
-from .macro_nutrient.macro_nutrient_controller import router as MacroNutrientRouter
-from .micro_nutrient.micro_nutrient_controller import router as MicroNutrientRouter
+from .nutrient.nutrient_controller import router as NutrientRouter
 from .auth.auth_controller import router as AuthRouter
 from .food_item.food_item_controller import router as FoodItemRouter
 from .config import settings
 from .common.enums import Tag
+from .database import initialize_database, close_database_connection
 
 
 def create_application() -> FastAPI:
     app = FastAPI()
+
+    # DB Events
+    app.add_event_handler("startup", initialize_database)
+    app.add_event_handler("shutdown", close_database_connection)
 
     app.include_router(AuthRouter,
                        prefix='/token', tags=[Tag.AUTHENTICATION])
@@ -26,10 +30,6 @@ def create_application() -> FastAPI:
         EthnicityRouter, prefix='/ethnicities', tags=[Tag.ETHNICITY])
     app.include_router(LanguageRouter, prefix='/languages',
                        tags=[Tag.LANGUAGE])
-    app.include_router(MacroNutrientRouter,
-                       prefix='/macro_nutrients', tags=[Tag.MACRO_NUTRIENT])
-    app.include_router(MicroNutrientRouter,
-                       prefix='/micro_nutrients', tags=[Tag.MICRO_NUTRIENT])
     app.include_router(FoodItemRouter,
                        prefix='/food_items', tags=[Tag.FOOD_ITEM])
 

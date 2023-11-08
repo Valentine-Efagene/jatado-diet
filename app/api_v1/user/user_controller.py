@@ -4,9 +4,9 @@ from .user_schema import User
 from ..common.schema import ResponseModel, ErrorResponseModel, ListQueryParams
 from ..common.serializer import serialize
 from ..common.services import retrieve_list
-from ..database import user_collection
 from ..auth.auth_schema import OAuthTokenDeps
 from .user_helper import deserialize_user
+from ..database import get_database
 
 from .user_service import (
     add_user,
@@ -26,7 +26,7 @@ router = APIRouter()
 
 
 @router.post("/", response_description="User data added into the database")
-async def add_user_data(user: CreateUserDto = Body(...)):
+async def add_user_data(user: CreateUserDto = Body(...), database=Depends(get_database)):
     """
     Create a new user account (See CreateUserDto)
 
@@ -39,7 +39,7 @@ async def add_user_data(user: CreateUserDto = Body(...)):
     - **password**: User password
     """
     user = serialize(user)
-    new_user = await add_user(user)
+    new_user = await add_user(database, user)
     return ResponseModel(new_user, "User added successfully.")
 
 

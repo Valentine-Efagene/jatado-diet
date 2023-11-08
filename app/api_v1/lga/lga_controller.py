@@ -3,7 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from ..common.schema import ResponseModel, ErrorResponseModel
 from ..common.services import retrieve_list
 from ..common.schema import ListQueryParams
-from ..database import lga_collection
+from ..database import get_database, get_lga_collection
 from .lga_helper import deserialize_lga
 from ..auth.auth_schema import OAuthTokenDeps
 
@@ -24,7 +24,7 @@ router = APIRouter()
 
 
 @router.post("/", response_description="lga data added into the database", status_code=status.HTTP_201_CREATED, description="Description", summary="Summary")
-async def add_lga_data(token: OAuthTokenDeps, lga: CreateLgaDto = Body(...)):
+async def add_lga_data(token: OAuthTokenDeps, lga: CreateLgaDto = Body(...), database=Depends(get_database)):
     """
     Add a LGA with the following information (See CreateLgaDto):
 
@@ -33,12 +33,13 @@ async def add_lga_data(token: OAuthTokenDeps, lga: CreateLgaDto = Body(...)):
     - **country_id**: Foreign key
     """
     lga = jsonable_encoder(lga)
-    new_lga = await add_lga(lga)
+    new_lga = await add_lga(database, lga)
     return ResponseModel(new_lga, "lga added successfully.")
 
 
 @router.get("/", response_description="lgas retrieved")
-async def get_lgas(token: OAuthTokenDeps, params: ListQueryParams = Depends()):
+async def get_lgas(token: OAuthTokenDeps, params: ListQueryParams = Depends(), database=Depends(get_database)):
+    lga_collection = get_lga_collection(database)
     countries = await retrieve_list(params=params, collection=lga_collection, deserialize=deserialize_lga)
 
     if countries:
@@ -48,8 +49,8 @@ async def get_lgas(token: OAuthTokenDeps, params: ListQueryParams = Depends()):
 
 
 @router.get("/{id}", response_description="lga data retrieved")
-async def get_lga_data(token: OAuthTokenDeps, id: str):
-    lga = await retrieve_lga(id)
+async def get_lga_data(token: OAuthTokenDeps, id: str, database=Depends(get_database)):
+    lga = await retrieve_lga(database, id)
 
     if lga:
         return ResponseModel(lga, "lga data retrieved successfully")
@@ -58,7 +59,7 @@ async def get_lga_data(token: OAuthTokenDeps, id: str):
 
 
 @router.put("/{id}")
-async def update_lga_data(token: OAuthTokenDeps, id: str, req: UpdateLgaDto = Body(...)):
+async def update_lga_data(token: OAuthTokenDeps, id: str, req: UpdateLgaDto = Body(...), database=Depends(get_database)):
     """
     Update a LGA (See UpdateLgaDto). 
     Note that all fields are optional here, 
@@ -69,7 +70,7 @@ async def update_lga_data(token: OAuthTokenDeps, id: str, req: UpdateLgaDto = Bo
     - **state_id**: Foreign key
     """
     req = {k: v for k, v in req.dict().items() if v is not None}
-    updated_lga = await update_lga(id, req)
+    updated_lga = await update_lga(database, id, req)
 
     if updated_lga:
         return ResponseModel(
@@ -84,8 +85,8 @@ async def update_lga_data(token: OAuthTokenDeps, id: str, req: UpdateLgaDto = Bo
 
 
 @router.delete("/{id}", response_description="lga data deleted from the database")
-async def delete_lga_data(token: OAuthTokenDeps, id: str):
-    deleted_lga = await delete_lga(id)
+async def delete_lga_data(token: OAuthTokenDeps, id: str, database=Depends(get_database)):
+    deleted_lga = await delete_lga(database, id)
     if deleted_lga:
         return ResponseModel(
             "lga with ID: {} removed".format(

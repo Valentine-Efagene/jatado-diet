@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body, Depends
 from ..common.serializer import serialize
 from ..common.services import retrieve_list
-from ..database import language_collection
+from ..database import get_language_collection, get_database
 from ..common.schema import ListQueryParams
 from ..common.schema import ResponseModel, ErrorResponseModel
 from .language_helper import deserialize_language
@@ -24,7 +24,7 @@ router = APIRouter()
 
 
 @router.post("/", response_description="Language data added into the database")
-async def add_language_data(token: OAuthTokenDeps, language: CreateLanguageDto = Body(...)):
+async def add_language_data(token: OAuthTokenDeps, language: CreateLanguageDto = Body(...), database=Depends(get_database)):
     """
     Add a language with the following information (See CreateLanguageDto):
 
@@ -33,12 +33,12 @@ async def add_language_data(token: OAuthTokenDeps, language: CreateLanguageDto =
     - **ethnicity_id**: Foreign key
     """
     language = serialize(language)
-    new_language = await add_language(language)
+    new_language = await add_language(database, language)
     return ResponseModel(new_language, "Language added successfully.")
 
 
 @router.get("/{id}", response_description="Language data retrieved")
-async def get_language_data(token: OAuthTokenDeps, id: str):
+async def get_language_data(token: OAuthTokenDeps, id: str, database=Depends(get_database)):
     language = await retrieve_language(id)
 
     if language:
@@ -48,7 +48,8 @@ async def get_language_data(token: OAuthTokenDeps, id: str):
 
 
 @router.get("/", response_description="Languages retrieved")
-async def get_languages(token: OAuthTokenDeps, params: ListQueryParams = Depends()):
+async def get_languages(token: OAuthTokenDeps, params: ListQueryParams = Depends(),  database=Depends(get_database)):
+    language_collection = get_language_collection(database)
     languages = await retrieve_list(params=params, collection=language_collection, deserialize=deserialize_language)
 
     if languages:
@@ -58,7 +59,7 @@ async def get_languages(token: OAuthTokenDeps, params: ListQueryParams = Depends
 
 
 @router.put("/{id}")
-async def update_language_data(token: OAuthTokenDeps, id: str, req: UpdateLanguageDto = Body(...)):
+async def update_language_data(token: OAuthTokenDeps, id: str, req: UpdateLanguageDto = Body(...), database=Depends(get_database)):
     """
     Update a language (See UpdateLanguageDto). 
     Note that all fields are optional here, 
@@ -68,7 +69,7 @@ async def update_language_data(token: OAuthTokenDeps, id: str, req: UpdateLangua
     - **description**: A description
     """
     req = {k: v for k, v in req.model_dump().items() if v is not None}
-    updated_language = await update_language(id, req)
+    updated_language = await update_language(database, id, req)
 
     if updated_language:
         return ResponseModel(
@@ -83,8 +84,8 @@ async def update_language_data(token: OAuthTokenDeps, id: str, req: UpdateLangua
 
 
 @router.delete("/{id}", response_description="Language data deleted from the database")
-async def delete_language_data(token: OAuthTokenDeps, id: str):
-    deleted_language = await delete_language(id)
+async def delete_language_data(token: OAuthTokenDeps, id: str, database=Depends(get_database)):
+    deleted_language = await delete_language(database, id)
     if deleted_language:
         return ResponseModel(
             "Language with ID: {} removed".format(

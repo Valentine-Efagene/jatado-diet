@@ -2,9 +2,9 @@ from fastapi import APIRouter, Body, Depends, status
 from ..common.serializer import serialize
 from ..common.schema import ListQueryParams
 from ..common.services import retrieve_list
-from ..database import state_collection
 from .state_helper import deserialize_state
 from ..auth.auth_schema import OAuthTokenDeps
+from ..database import get_database, get_state_collection
 
 from .state_service import (
     add_state,
@@ -25,7 +25,7 @@ router = APIRouter()
 
 
 @router.post("/", response_description="State data added into the database", status_code=status.HTTP_201_CREATED)
-async def add_state_data(state: CreateStateDto = Body(...)):
+async def add_state_data(state: CreateStateDto = Body(...), database=Depends(get_database)):
     """
     Add a state with the following information (See CreateStateDto):
 
@@ -34,12 +34,13 @@ async def add_state_data(state: CreateStateDto = Body(...)):
     - **country_id**: Foreign key
     """
     state = serialize(state)
-    new_state = await add_state(state)
+    new_state = await add_state(database, state)
     return ResponseModel(new_state, "state added successfully.")
 
 
 @router.get("/", response_description="States retrieved")
-async def get_states(token: OAuthTokenDeps, params: ListQueryParams = Depends()):
+async def get_states(token: OAuthTokenDeps, params: ListQueryParams = Depends(), database=Depends(get_database)):
+    state_collection = get_state_collection(database)
     states = await retrieve_list(params=params, collection=state_collection, deserialize=deserialize_state)
 
     if states:

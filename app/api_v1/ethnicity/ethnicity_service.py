@@ -6,14 +6,16 @@ from .ethnicity_helper import deserialize_ethnicity
 # Retrieve a ethnicity with a matching ID
 
 
-async def retrieve_ethnicity(id: str) -> dict:
+async def retrieve_ethnicity(database: AsyncIOMotorDatabase, id: str) -> dict:
+    ethnicity_collection = get_ethnicity_collection(database)
     ethnicity = await ethnicity_collection.find_one({"_id": ObjectId(id)})
 
     if ethnicity:
         return deserialize_ethnicity(ethnicity)
 
 
-async def add_ethnicity(data: dict) -> dict:
+async def add_ethnicity(database: AsyncIOMotorDatabase, data: dict) -> dict:
+    ethnicity_collection = get_ethnicity_collection(database)
     ethnicity = await ethnicity_collection.insert_one(data)
     new_ethnicity = await ethnicity_collection.find_one({"_id": ethnicity.inserted_id})
     return deserialize_ethnicity(new_ethnicity)
@@ -21,11 +23,12 @@ async def add_ethnicity(data: dict) -> dict:
 # Update a ethnicity with a matching ID
 
 
-async def update_ethnicity(id: str, data: dict):
+async def update_ethnicity(database: AsyncIOMotorDatabase, id: str, data: dict):
     # Return false if an empty request body is sent.
     if len(data) < 1:
         return False
 
+    ethnicity_collection = get_ethnicity_collection(database)
     ethnicity = await ethnicity_collection.find_one({"_id": ObjectId(id)})
 
     if ethnicity:
@@ -41,7 +44,8 @@ async def update_ethnicity(id: str, data: dict):
 # Delete a ethnicity from the database
 
 
-async def delete_ethnicity(id: str):
+async def delete_ethnicity(database: AsyncIOMotorDatabase, id: str):
+    ethnicity_collection = get_ethnicity_collection(database)
     ethnicity = await ethnicity_collection.find_one({"_id": ObjectId(id)})
 
     if ethnicity:

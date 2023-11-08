@@ -40,7 +40,7 @@ class User(BaseModel):
 
 
 class UserInDB(User):
-    hashed_password: str
+    password_hash: str
 
     model_config = {
         'arbitrary_types_allowed': True,
@@ -51,7 +51,7 @@ class UserInDB(User):
                 "firstName": "John",
                 "lastName": "Doe",
                 "email": "johndoe@example.com",
-                "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+                "password_hash": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
                 "role": Role.STAFF,
                 "status": Status.ACTIVE,
             },
@@ -73,12 +73,12 @@ class CreateUserDto(BaseModel):
         'json_schema_extra': {
             "example": {
                 "username": "johndoe",
+                "email": "johndoe@example.com",
                 "firstName": "John",
                 "lastName": "Doe",
-                "email": "johndoe@example.com",
-                "password": "secret",
-                "role": Role.STAFF,
-                "status": Status.ACTIVE,
+                "role": "STAFF",
+                "status": "ACTIVE",
+                "password": "secret"
             },
         },
     }

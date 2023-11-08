@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, status, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from ..common.schema import ResponseModel
+from ..database import get_database
 from .auth_schema import Token
 
 from .auth_service import (
@@ -17,7 +18,7 @@ router = APIRouter()
 
 @router.post("/", response_model=Token)
 async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()], database=Depends(get_database)
 ):
     """
     This is the authentication route.  
@@ -27,7 +28,7 @@ async def login_for_access_token(
     - **username**: Username for account
     - **password**: Password
     """
-    user = await authenticate_user(form_data.username, form_data.password)
+    user = await authenticate_user(database, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

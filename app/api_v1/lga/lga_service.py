@@ -1,18 +1,21 @@
 from bson.objectid import ObjectId
 from ..database import *
 from .lga_helper import deserialize_lga
+from ..database import get_lga_collection
 
 # Retrieve a lga with a matching ID
 
 
-async def retrieve_lga(id: str) -> dict:
+async def retrieve_lga(database: AsyncIOMotorDatabase, id: str) -> dict:
+    lga_collection = get_lga_collection(database)
     lga = await lga_collection.find_one({"_id": ObjectId(id)})
 
     if lga:
         return deserialize_lga(lga)
 
 
-async def add_lga(data: dict) -> dict:
+async def add_lga(database: AsyncIOMotorDatabase, data: dict) -> dict:
+    lga_collection = get_lga_collection(database)
     lga = await lga_collection.insert_one(data)
     new_lga = await lga_collection.find_one({"_id": lga.inserted_id})
     return deserialize_lga(new_lga)
@@ -25,6 +28,7 @@ async def update_lga(id: str, data: dict):
     if len(data) < 1:
         return False
 
+    lga_collection = get_lga_collection(database)
     lga = await lga_collection.find_one({"_id": ObjectId(id)})
 
     if lga:
@@ -40,7 +44,8 @@ async def update_lga(id: str, data: dict):
 # Delete a lga from the database
 
 
-async def delete_lga(id: str):
+async def delete_lga(database: AsyncIOMotorDatabase, id: str):
+    lga_collection = get_lga_collection(database)
     lga = await lga_collection.find_one({"_id": ObjectId(id)})
 
     if lga:

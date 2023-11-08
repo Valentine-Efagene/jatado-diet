@@ -3,7 +3,7 @@ from ..common.serializer import serialize
 from ..common.schema import ResponseModel, ErrorResponseModel
 from ..common.services import retrieve_list
 from ..common.schema import ListQueryParams
-from ..database import ethnicity_collection
+from ..database import get_database, get_ethnicity_collection
 from .ethnicity_helper import deserialize_ethnicity
 from ..auth.auth_schema import OAuthTokenDeps
 
@@ -24,7 +24,7 @@ router = APIRouter()
 
 
 @router.post("/", response_description="ethnicity data added into the database", status_code=status.HTTP_201_CREATED)
-async def add_ethnicity_data(token: OAuthTokenDeps, ethnicity: CreateEthnicityDto = Body(...)):
+async def add_ethnicity_data(token: OAuthTokenDeps, ethnicity: CreateEthnicityDto = Body(...), database=Depends(get_database)):
     """
     Add an ethnicity with the following information (See CreateEthnicityDto):
 
@@ -33,12 +33,13 @@ async def add_ethnicity_data(token: OAuthTokenDeps, ethnicity: CreateEthnicityDt
     - **lga_id**: Foreign key
     """
     ethnicity = serialize(ethnicity)
-    new_ethnicity = await add_ethnicity(ethnicity)
+    new_ethnicity = await add_ethnicity(database, ethnicity)
     return ResponseModel(new_ethnicity, "ethnicity added successfully.")
 
 
 @router.get("/", response_description="ethnicities retrieved")
-async def get_ethnicities(token: OAuthTokenDeps, params: ListQueryParams = Depends()):
+async def get_ethnicities(token: OAuthTokenDeps, params: ListQueryParams = Depends(), database=Depends(get_database)):
+    ethnicity_collection = get_ethnicity_collection(database)
     countries = await retrieve_list(params=params, collection=ethnicity_collection, deserialize=deserialize_ethnicity)
 
     if countries:
@@ -48,8 +49,8 @@ async def get_ethnicities(token: OAuthTokenDeps, params: ListQueryParams = Depen
 
 
 @router.get("/{id}", response_description="ethnicity data retrieved")
-async def get_ethnicity_data(token: OAuthTokenDeps, id: str):
-    ethnicity = await retrieve_ethnicity(id)
+async def get_ethnicity_data(token: OAuthTokenDeps, id: str, database=Depends(get_database)):
+    ethnicity = await retrieve_ethnicity(database, id)
 
     if ethnicity:
         return ResponseModel(ethnicity, "ethnicity data retrieved successfully")
@@ -58,7 +59,7 @@ async def get_ethnicity_data(token: OAuthTokenDeps, id: str):
 
 
 @router.put("/{id}")
-async def update_ethnicity_data(token: OAuthTokenDeps, id: str, req: UpdateEthnicityDto = Body(...)):
+async def update_ethnicity_data(token: OAuthTokenDeps, id: str, req: UpdateEthnicityDto = Body(...), database=Depends(get_database)):
     """
     Update an ethnicity (See UpdateEthnicityDto). 
     Note that all fields are optional here, 
@@ -68,7 +69,7 @@ async def update_ethnicity_data(token: OAuthTokenDeps, id: str, req: UpdateEthni
     - **description**: A description
     """
     req = {k: v for k, v in req.model_dump().items() if v is not None}
-    updated_ethnicity = await update_ethnicity(id, req)
+    updated_ethnicity = await update_ethnicity(database, id, req)
 
     if updated_ethnicity:
         return ResponseModel(
@@ -83,8 +84,8 @@ async def update_ethnicity_data(token: OAuthTokenDeps, id: str, req: UpdateEthni
 
 
 @router.delete("/{id}", response_description="ethnicity data deleted from the database")
-async def delete_ethnicity_data(token: OAuthTokenDeps, id: str):
-    deleted_ethnicity = await delete_ethnicity(id)
+async def delete_ethnicity_data(token: OAuthTokenDeps, id: str, database=Depends(get_database)):
+    deleted_ethnicity = await delete_ethnicity(database, id)
     if deleted_ethnicity:
         return ResponseModel(
             "ethnicity with ID: {} removed".format(
