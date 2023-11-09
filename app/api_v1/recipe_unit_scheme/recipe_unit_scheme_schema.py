@@ -1,13 +1,13 @@
 from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import List
+from bson import ObjectId
 from ..common.schema import Name
 from ..common.types import PyObjectId, Type
 
 
 class RecipeUnitScheme(BaseModel):
     id: PyObjectId = Field(alias='_id')
-    name: str = Field(...)
     names: List[Name] = Field([])
     options: List[Type] = Field([])
     description: str = Field(None)
@@ -17,7 +17,6 @@ class RecipeUnitScheme(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "name": "Ethiope East",
                 "description": "Has a RecipeUnitScheme university (DELSU)",
                 "state_id": "State ID",
                 "created_at": str(datetime.now()),
@@ -29,7 +28,6 @@ class RecipeUnitScheme(BaseModel):
 
 
 class CreateRecipeUnitSchemeDto(BaseModel):
-    name: str = Field(...)
     description: str = Field(None)
     options: List[Type] = Field([])
     names: List[Name] = Field([])
@@ -39,18 +37,24 @@ class CreateRecipeUnitSchemeDto(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "name": "Lagos",
-                "description": "The economic capital of Nigeria",
-                "state_id": "State ID",
-                "created_at": str(datetime.now()),
-                "updated_at": str(datetime.now())
+                "name": "Wash",
+                "description": "Cattle meat",
+                "names": [
+                    {
+                        'name': 'beef',
+                        'language_id': str(ObjectId())
+                    },
+                ],
+                "options": [
+                    (1, 'One'),
+                    (2, 'Two')
+                ]
             }
         },
     }
 
 
 class UpdateRecipeUnitSchemeDto(BaseModel):
-    name: str | None = Field(None)
     description: str | None = Field(None)
     options: List[Type] | None = Field([])
     names: List[Name] | None = Field([])
@@ -59,7 +63,6 @@ class UpdateRecipeUnitSchemeDto(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "name": "Lagos",
                 "description": "The economic capital of Nigeria",
                 "recipe_unit_scheme_id": "recipe_unit_scheme ID",
             }

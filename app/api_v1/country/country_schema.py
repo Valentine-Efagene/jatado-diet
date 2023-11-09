@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from ..common.types import PyObjectId
 
 
-class CountrySchema(BaseModel):
+class Country(BaseModel):
     id: PyObjectId = Field(alias='_id')
     name: str = Field(...)
     description: str = Field(None)

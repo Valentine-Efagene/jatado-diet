@@ -25,7 +25,6 @@ class NameHydrated(BaseModel):
 
 class FoodItem(BaseModel):
     id: PyObjectId = Field(alias='_id')
-    name: str = Field(...)
     description: str = Field(None)
     names: List[Name] = Field([])
     nutrients: List[NutrientAndQuantity] = Field([])
@@ -36,7 +35,6 @@ class FoodItem(BaseModel):
         'arbitrary_types_allowed': True,
         'json_schema_extra': {
             "example": {
-                "name": "Nigeria",
                 "description": "Most populous nation in Africa",
             },
         },
@@ -76,7 +74,6 @@ class CreateFoodItemDto(BaseModel):
         'arbitrary_types_allowed': True,
         'json_schema_extra': {
             "example": {
-                "name": "Beef",
                 "description": "Cattle meat",
                 "quantity": 5,
                 "names": [

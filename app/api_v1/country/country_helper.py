@@ -1,5 +1,5 @@
-from .country_schema import CountrySchema
+from .country_schema import Country
 
 
 def deserialize_country(country) -> dict:
-    return CountrySchema(**country)
+    return Country(**country)

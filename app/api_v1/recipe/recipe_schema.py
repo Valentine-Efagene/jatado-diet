@@ -1,37 +1,56 @@
 from datetime import datetime
-import strawberry
 from pydantic import BaseModel, Field
-from ..common.types import PyObjectId
+from typing import List
+from ..recipe_unit_scheme.recipe_unit_scheme_schema import RecipeUnitScheme
+from ..common.schema import Name
+from ..common.types import PyObjectId, Type
 
 
-@strawberry.type
-class State(BaseModel):
+class FoodItemAndQuantity(BaseModel):
+    food_item_id: str
+    quantity_id: str
+
+
+class Step(BaseModel):
+    food_item_id: str
+    substitutes: List[FoodItemAndQuantity]
+    action_id: str
+    time: float
+    main_ingredient: bool
+    reduceable: float
+    removeable: bool
+    prep: bool
+    description: str
+
+
+class Recipe(BaseModel):
     id: PyObjectId = Field(alias='_id')
     name: str = Field(...)
+    names: List[Name] = Field([])
+    steps: str = Field(...)
     description: str = Field(None)
-    country_id: str = Field(...)
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
-        'arbitrary_types_allowed': True,
         "json_schema_extra": {
             "example": {
-                "name": "Lagos",
-                "description": "The economic capital of Nigeria",
-                "country_id": "Country ID",
+                "name": "Ethiope East",
+                "description": "Has a Recipe university (DELSU)",
+                "state_id": "State ID",
                 "created_at": str(datetime.now()),
                 "updated_at": str(datetime.now())
             }
         },
+        'arbitrary_types_allowed': True,
     }
 
 
-@strawberry.input
-class CreateStateDto(BaseModel):
+class CreateRecipeDto(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
-    country_id: str = Field(None)
+    recipe_unit_scheme_id: str | None = Field(None)
+    names: List[Name] = Field([])
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 
@@ -40,7 +59,7 @@ class CreateStateDto(BaseModel):
             "example": {
                 "name": "Lagos",
                 "description": "The economic capital of Nigeria",
-                "country_id": "Country Id",
+                "state_id": "State ID",
                 "created_at": str(datetime.now()),
                 "updated_at": str(datetime.now())
             }
@@ -48,11 +67,11 @@ class CreateStateDto(BaseModel):
     }
 
 
-@strawberry.input
-class UpdateStateDto(BaseModel):
+class UpdateRecipeDto(BaseModel):
     name: str | None = Field(None)
     description: str | None = Field(None)
-    country_id: str | None = Field(None)
+    recipe_unit_scheme_id: str | None = Field(None)
+    names: List[Name] | None = Field([])
     updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
@@ -60,7 +79,7 @@ class UpdateStateDto(BaseModel):
             "example": {
                 "name": "Lagos",
                 "description": "The economic capital of Nigeria",
-                "country_id": "Country Id",
+                "recipe_id": "recipe ID",
             }
         }
     }

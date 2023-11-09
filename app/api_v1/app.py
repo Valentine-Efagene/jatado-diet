@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+import strawberry
+from strawberry.fastapi import GraphQLRouter
 from .country.country_controller import router as CountryRouter
 from .state.state_controller import router as StateRouter
 from .user.user_controller import router as UserRouter
@@ -13,10 +15,12 @@ from .recipe_quantity.recipe_quantity_controller import router as RecipeQuantity
 from .food_item.food_item_controller import router as FoodItemRouter
 from .config import settings
 from .common.enums import Tag
+from .common.strawberry_core import get_context
 from .database import initialize_database, close_database_connection
+from .common.strawberry_core import Query
 
 
-def create_application() -> FastAPI:
+def create_rest_application() -> FastAPI:
     app = FastAPI()
 
     # DB Events
@@ -62,4 +66,17 @@ def create_application() -> FastAPI:
     return app
 
 
-app = create_application()
+def create_graphql_application() -> FastAPI:
+    app = FastAPI()
+    schema = strawberry.Schema(query=Query)
+    graphql_app = GraphQLRouter(schema, context_getter=get_context)
+
+    # DB Events
+    app.add_event_handler("startup", initialize_database)
+    app.add_event_handler("shutdown", close_database_connection)
+    app.include_router(graphql_app, prefix="/graphql")
+    return app
+
+
+app = create_graphql_application()
+# app = create_rest_application()

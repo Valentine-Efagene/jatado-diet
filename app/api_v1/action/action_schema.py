@@ -7,7 +7,6 @@ from ..common.types import PyObjectId
 
 class Action(BaseModel):
     id: PyObjectId = Field(alias='_id')
-    name: str = Field(...)
     names: List[Name] = Field([])
     description: str = Field(None)
     created_at: datetime | None = Field(datetime.now())
@@ -16,7 +15,6 @@ class Action(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "name": "Ethiope East",
                 "description": "Has a Action university (DELSU)",
                 "state_id": "State ID",
                 "created_at": str(datetime.now()),
@@ -28,7 +26,6 @@ class Action(BaseModel):
 
 
 class CreateActionDto(BaseModel):
-    name: str = Field(...)
     description: str = Field(None)
     state_id: str = Field(None)
     created_at: datetime | None = Field(datetime.now())
@@ -48,7 +45,6 @@ class CreateActionDto(BaseModel):
 
 
 class UpdateActionDto(BaseModel):
-    name: str | None = Field(None)
     description: str | None = Field(None)
     state_id: str | None = Field(None)
     updated_at: datetime | None = Field(datetime.now())
