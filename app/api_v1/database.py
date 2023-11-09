@@ -102,3 +102,7 @@ def get_action_collection(database: AsyncIOMotorDatabase) -> AsyncIOMotorCollect
 
 def get_recipe_unit_scheme_collection(database: AsyncIOMotorDatabase) -> AsyncIOMotorCollection:
     return database.get_collection("recipe_unit_schemes")
+
+
+def get_recipe_quantity_collection(database: AsyncIOMotorDatabase) -> AsyncIOMotorCollection:
+    return database.get_collection("recipe_quantities")

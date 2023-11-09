@@ -9,6 +9,7 @@ from .language.language_controller import router as LanguageRouter
 from .nutrient.nutrient_controller import router as NutrientRouter
 from .auth.auth_controller import router as AuthRouter
 from .recipe_unit_scheme.recipe_unit_scheme_controller import router as RecipeUnitSchemRouter
+from .recipe_quantity.recipe_quantity_controller import router as RecipeQuantity
 from .food_item.food_item_controller import router as FoodItemRouter
 from .config import settings
 from .common.enums import Tag
@@ -34,6 +35,8 @@ def create_application() -> FastAPI:
                        tags=[Tag.ACTION])
     app.include_router(RecipeUnitSchemRouter, prefix='/recipe_unit_schemes',
                        tags=[Tag.RECIPE_UNIT_SCHEME])
+    app.include_router(RecipeQuantity, prefix='/recipe_quantities',
+                       tags=[Tag.RECIPE_QUANTITY])
     app.include_router(
         EthnicityRouter, prefix='/ethnicities', tags=[Tag.ETHNICITY])
     app.include_router(LanguageRouter, prefix='/languages',

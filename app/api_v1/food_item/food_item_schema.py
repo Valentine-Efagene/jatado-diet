@@ -99,6 +99,8 @@ class CreateFoodItemDto(BaseModel):
 class UpdateFoodItemDto(BaseModel):
     name: str | None = Field(None)
     description: str | None = Field(None)
+    names: List[NameHydrated] | None = Field([])
+    nutrients: List[NutrientHydratedAndQuantity] | None = Field([])
     updated_at: datetime | None = Field(datetime.now())
 
     model_config: {

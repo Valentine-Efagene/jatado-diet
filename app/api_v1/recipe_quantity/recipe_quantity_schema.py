@@ -1,34 +1,39 @@
 from datetime import datetime
 from pydantic import BaseModel, Field
-from ..common.types import PyObjectId
+from typing import List
+from ..recipe_unit_scheme.recipe_unit_scheme_schema import RecipeUnitScheme
+from ..common.schema import Name
+from ..common.types import PyObjectId, Type
 
 
-class State(BaseModel):
+class RecipeQuantity(BaseModel):
     id: PyObjectId = Field(alias='_id')
     name: str = Field(...)
+    names: List[Name] = Field([])
+    recipe_unit_scheme_id: str = Field(...)
     description: str = Field(None)
-    country_id: str = Field(...)
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
-        'arbitrary_types_allowed': True,
         "json_schema_extra": {
             "example": {
-                "name": "Lagos",
-                "description": "The economic capital of Nigeria",
-                "country_id": "Country ID",
+                "name": "Ethiope East",
+                "description": "Has a RecipeQuantity university (DELSU)",
+                "state_id": "State ID",
                 "created_at": str(datetime.now()),
                 "updated_at": str(datetime.now())
             }
         },
+        'arbitrary_types_allowed': True,
     }
 
 
-class CreateStateDto(BaseModel):
+class CreateRecipeQuantityDto(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
-    country_id: str = Field(None)
+    recipe_unit_scheme_id: str | None = Field(None)
+    names: List[Name] = Field([])
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 
@@ -37,7 +42,7 @@ class CreateStateDto(BaseModel):
             "example": {
                 "name": "Lagos",
                 "description": "The economic capital of Nigeria",
-                "country_id": "Country Id",
+                "state_id": "State ID",
                 "created_at": str(datetime.now()),
                 "updated_at": str(datetime.now())
             }
@@ -45,10 +50,11 @@ class CreateStateDto(BaseModel):
     }
 
 
-class UpdateStateDto(BaseModel):
+class UpdateRecipeQuantityDto(BaseModel):
     name: str | None = Field(None)
     description: str | None = Field(None)
-    country_id: str | None = Field(None)
+    recipe_unit_scheme_id: str | None = Field(None)
+    names: List[Name] | None = Field([])
     updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
@@ -56,7 +62,7 @@ class UpdateStateDto(BaseModel):
             "example": {
                 "name": "Lagos",
                 "description": "The economic capital of Nigeria",
-                "country_id": "Country Id",
+                "recipe_quantity_id": "recipe_quantity ID",
             }
         }
     }
