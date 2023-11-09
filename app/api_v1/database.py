@@ -94,3 +94,11 @@ def get_nutrients_collection(database: AsyncIOMotorDatabase) -> AsyncIOMotorColl
 
 def get_food_item_collection(database: AsyncIOMotorDatabase) -> AsyncIOMotorCollection:
     return database.get_collection("food_items")
+
+
+def get_action_collection(database: AsyncIOMotorDatabase) -> AsyncIOMotorCollection:
+    return database.get_collection("actions")
+
+
+def get_recipe_unit_scheme_collection(database: AsyncIOMotorDatabase) -> AsyncIOMotorCollection:
+    return database.get_collection("recipe_unit_schemes")

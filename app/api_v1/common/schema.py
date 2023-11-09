@@ -24,17 +24,6 @@ class ListQueryParams:
     keyword: str | None = Query(None, description="Keyword to search by")
 
 
-class Nutrient(BaseModel):
-    id: PyObjectId = Field(alias='_id')
-    name: str = Field(...)
-    description: str = Field(None)
-
-    model_config = {
-        'arbitrary_types_allowed': True,
-        'json_schema_extra': {
-            "example": {
-                "name": "Carbohydrate",
-                "description": "Energy foods",
-            },
-        },
-    }
+class Name(BaseModel):
+    language_id: str
+    name: str

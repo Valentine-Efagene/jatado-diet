@@ -3,14 +3,9 @@ from pydantic import BaseModel, Field
 from typing import List
 from bson import ObjectId
 from ..language.language_schema import Language
-from ..common.schema import Nutrient
+from ..common.schema import Name
+from ..nutrient.nutrient_schema import Nutrient
 from ..common.types import PyObjectId
-from ..common.serializer import serialize
-
-
-class Name(BaseModel):
-    language_id: str
-    name: str
 
 
 class NutrientAndQuantity(BaseModel):

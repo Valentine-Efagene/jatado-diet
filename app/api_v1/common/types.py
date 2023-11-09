@@ -1,6 +1,6 @@
 # https://stackoverflow.com/a/76722139
 
-from typing import Any
+from typing import Any, Tuple
 from typing import Annotated, Union
 from bson import ObjectId
 from pydantic import PlainSerializer, AfterValidator, WithJsonSchema
@@ -20,3 +20,5 @@ PyObjectId = Annotated[
     PlainSerializer(lambda x: str(x), return_type=str),
     WithJsonSchema({"type": "string"}, mode="serialization"),
 ]
+
+Type = Tuple[int, str]

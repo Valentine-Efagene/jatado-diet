@@ -8,6 +8,8 @@ class Tag(str, Enum):
     COUNTRY = 'Countries'
     STATE = 'States'
     LGA = 'LGAs'
+    RECIPE_UNIT_SCHEME = 'Recipe Unit Scheme'
+    ACTION = 'Actions'
     ETHNICITY = 'Ethnicity'
     LANGUAGE = 'Language'
     NUTRIENT = 'Nutrients'

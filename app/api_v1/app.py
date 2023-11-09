@@ -3,10 +3,12 @@ from .country.country_controller import router as CountryRouter
 from .state.state_controller import router as StateRouter
 from .user.user_controller import router as UserRouter
 from .lga.lga_controller import router as LgaRouter
+from .action.action_controller import router as ActionRouter
 from .ethnicity.ethnicity_controller import router as EthnicityRouter
 from .language.language_controller import router as LanguageRouter
 from .nutrient.nutrient_controller import router as NutrientRouter
 from .auth.auth_controller import router as AuthRouter
+from .recipe_unit_scheme.recipe_unit_scheme_controller import router as RecipeUnitSchemRouter
 from .food_item.food_item_controller import router as FoodItemRouter
 from .config import settings
 from .common.enums import Tag
@@ -28,6 +30,10 @@ def create_application() -> FastAPI:
     app.include_router(LgaRouter, prefix='/lgas', tags=[Tag.LGA])
     app.include_router(NutrientRouter, prefix='/nutrients',
                        tags=[Tag.NUTRIENT])
+    app.include_router(ActionRouter, prefix='/actions',
+                       tags=[Tag.ACTION])
+    app.include_router(RecipeUnitSchemRouter, prefix='/recipe_unit_schemes',
+                       tags=[Tag.RECIPE_UNIT_SCHEME])
     app.include_router(
         EthnicityRouter, prefix='/ethnicities', tags=[Tag.ETHNICITY])
     app.include_router(LanguageRouter, prefix='/languages',

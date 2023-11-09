@@ -1,44 +1,45 @@
 from datetime import datetime
 from pydantic import BaseModel, Field
+from typing import List
+from ..common.schema import Name
 from ..common.types import PyObjectId
 
 
-class Nutrient(BaseModel):
+class Action(BaseModel):
     id: PyObjectId = Field(alias='_id')
-    macro_id: str | None = Field(None)
-    is_macro: bool = Field(...)
+    name: str = Field(...)
+    names: List[Name] = Field([])
+    description: str = Field(None)
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
-        'arbitrary_types_allowed': True,
         "json_schema_extra": {
             "example": {
-                "name": "Carbohydrate",
-                "description": "Energy foods",
-                "macro_nutrient_id": "653c159307e807c4b9b52a98",
+                "name": "Ethiope East",
+                "description": "Has a Action university (DELSU)",
+                "state_id": "State ID",
                 "created_at": str(datetime.now()),
                 "updated_at": str(datetime.now())
             }
         },
+        'arbitrary_types_allowed': True,
     }
 
 
-class CreateNutrientDto(BaseModel):
+class CreateActionDto(BaseModel):
     name: str = Field(...)
     description: str = Field(None)
-    is_macro: bool = Field(...)
-    macro_id: str | None = Field(None)
+    state_id: str = Field(None)
     created_at: datetime | None = Field(datetime.now())
     updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         "json_schema_extra": {
             "example": {
-                "name": "Carbohydrate",
-                "description": "Energy foods",
-                "is_macro": False,
-                "macro_id": "653c159307e807c4b9b52a98",
+                "name": "Lagos",
+                "description": "The economic capital of Nigeria",
+                "state_id": "State ID",
                 "created_at": str(datetime.now()),
                 "updated_at": str(datetime.now())
             }
@@ -46,18 +47,18 @@ class CreateNutrientDto(BaseModel):
     }
 
 
-class UpdateNutrientDto(BaseModel):
+class UpdateActionDto(BaseModel):
     name: str | None = Field(None)
     description: str | None = Field(None)
-    macro_id: str | None = Field(None)
-    is_macro: bool | None = Field(...)
+    state_id: str | None = Field(None)
     updated_at: datetime | None = Field(datetime.now())
 
     model_config = {
         "json_schema_extra": {
             "example": {
-                "description": "Energy foods",
-                "macro_id": "Country Id"
+                "name": "Lagos",
+                "description": "The economic capital of Nigeria",
+                "action_id": "action ID",
             }
         }
     }
